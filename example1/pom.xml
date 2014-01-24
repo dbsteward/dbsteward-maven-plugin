@@ -27,6 +27,16 @@
         <artifactId>dbsteward-maven-plugin</artifactId>
         <version>1.3.7-SNAPSHOT</version>
         <configuration>
+          <!--
+            dbstewardBinaryPath
+            The binary available on your path, such as if you installed DBSteward via PEAR
+            or the fully qualified path to your DBSteward working copy.
+          -->
+          <dbstewardBinaryPath>dbsteward</dbstewardBinaryPath>
+          <!--
+            definitionFile
+            The relative or absolute path to your DBSteward database definition XML.
+          -->
           <definitionFile>example1.xml</definitionFile>
         </configuration>
         <!--
