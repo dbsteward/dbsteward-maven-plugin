@@ -51,11 +51,11 @@ public class CompileMojo extends AbstractMojo {
   @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
   private File outputDir;
   
-  @Parameter(defaultValue = "${project.dbsteward.files}", property = "files", required = true)
-  private File files;
+  @Parameter(defaultValue = "${project.dbsteward.definition}", property = "definitionFile", required = true)
+  private File definitionFile;
 
   public void execute() throws MojoExecutionException {
-    getLog().info("Compiling DBSteward defintions: ");
+    getLog().info("Compiling DBSteward definition: " + definitionFile.getPath());
 
     //@TODO
   }
