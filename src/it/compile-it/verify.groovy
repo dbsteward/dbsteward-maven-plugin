@@ -1,3 +1,3 @@
-File touchFile = new File( basedir, "target/touch.txt" );
+File buildFile = new File( basedir, "target/compile-it_build.sql" );
 
-assert touchFile.isFile()
+assert buildFile.isFile()
