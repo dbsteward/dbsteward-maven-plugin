@@ -47,7 +47,14 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <goalPrefix>dbsteward-maven-plugin</goalPrefix>
+          <!--
+            Register the goal prefix dbsteward
+            So the compile goal can be called like this:
+            $ mvn dbsteward:compile
+            instead of the fully qualified artifactId:goal
+            $ mvn org.dbsteward.maven:dbsteward-maven-plugin:compile
+          -->
+          <goalPrefix>dbsteward</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>
