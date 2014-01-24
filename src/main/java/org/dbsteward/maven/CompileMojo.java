@@ -48,16 +48,38 @@ import java.io.IOException;
 @Mojo(name = "compile", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class CompileMojo extends AbstractMojo {
 
+  @Parameter(defaultValue = "dbsteward", property = "dbstewardBinaryPath", required = true)
+  private File dbstewardBinaryPath;
+  
+  @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
+  private File definitionFile;
+  
   @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
   private File outputDir;
-  
-  @Parameter(defaultValue = "${project.dbsteward.definition}", property = "definitionFile", required = true)
-  private File definitionFile;
 
   public void execute() throws MojoExecutionException {
     getLog().info("Compiling DBSteward definition: " + definitionFile.getPath());
 
-    //@TODO
+    try {
+      runDbsteward("--xml= " + definitionFile.getPath());
+    }
+    catch (IOException ioe) {
+      getLog().error("Error During DBSteward execution: " + ioe.getMessage(), ioe);
+      
+      throw new MojoExecutionException("Unexpected DBSteward Execution Exception", ioe);
+    }
+    
+  }
+
+  /**
+   * Run DBSteward binary with the specified parameters
+   * 
+   * @param command
+   * @throws IOException
+   */
+  protected void runDbsteward(String command) throws IOException {
+    Runtime rt = Runtime.getRuntime();
+    Process pr = rt.exec(dbstewardBinaryPath.getPath() + " " + command);
   }
 
 }
