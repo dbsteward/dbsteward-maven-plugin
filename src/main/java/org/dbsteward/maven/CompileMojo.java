@@ -1,10 +1,10 @@
 package org.dbsteward.maven;
 
 /**
- * This software is BSD (2 Clause) licensed. See
+ * This software is licensed under the BSD (2 Clause) license.
  * http://opensource.org/licenses/BSD-2-Clause
  *
- * Copyright (c) 2014, Nicholas Kiraly All rights reserved.
+ * Copyright (c) 2014, Nicholas J Kiraly, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,6 +39,13 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
+import org.codehaus.plexus.util.cli.Arg;
+import org.codehaus.plexus.util.cli.CommandLineException;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
+import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
  * Compile the specified DBSteward definition files
@@ -50,10 +57,10 @@ public class CompileMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "dbsteward", property = "dbstewardBinaryPath", required = true)
   private File dbstewardBinaryPath;
-  
+
   @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
   private File definitionFile;
-  
+
   @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
   private File outputDir;
 
@@ -61,25 +68,36 @@ public class CompileMojo extends AbstractMojo {
     getLog().info("Compiling DBSteward definition: " + definitionFile.getPath());
 
     try {
-      runDbsteward("--xml= " + definitionFile.getPath());
+      runDbsteward("--xml=" + definitionFile.getPath());
+    } catch (CommandLineException ioe) {
+      getLog().error("DBSteward Execution Exception: " + ioe.getMessage(), ioe);
     }
-    catch (IOException ioe) {
-      getLog().error("Error During DBSteward execution: " + ioe.getMessage(), ioe);
-      
-      throw new MojoExecutionException("Unexpected DBSteward Execution Exception", ioe);
-    }
-    
+
   }
 
   /**
    * Run DBSteward binary with the specified parameters
-   * 
-   * @param command
-   * @throws IOException
+   *
+   * @param args
+   * @throws org.codehaus.plexus.util.cli.CommandLineException
+   * @throws org.apache.maven.plugin.MojoExecutionException
    */
-  protected void runDbsteward(String command) throws IOException {
-    Runtime rt = Runtime.getRuntime();
-    Process pr = rt.exec(dbstewardBinaryPath.getPath() + " " + command);
+  protected void runDbsteward(String... args) throws CommandLineException, MojoExecutionException {
+
+    Commandline commandLine = new Commandline();
+    commandLine.setExecutable(dbstewardBinaryPath.getAbsolutePath());
+
+    for (String arg : args) {
+      Arg _arg = commandLine.createArg();
+      _arg.setValue(arg);
+    }
+    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(getLog());
+    StringStreamConsumer errorStream = new StringStreamConsumer();
+
+    int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+    if (returnCode != 0) {
+      throw new MojoExecutionException("Unexpected DBSteward Execution! Error Buffer = " + errorStream.getOutput());
+    }
   }
 
 }
