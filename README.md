@@ -47,6 +47,7 @@ $ mvn install
 
 4) Run the plugin compile goal to build your database creation SQL file:
 ```bash
+[ nkiraly@generati ~/that-project-tho ]
 mvn org.dbsteward.maven:dbsteward-maven-plugin:compile
 ```
 
