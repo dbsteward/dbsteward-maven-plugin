@@ -79,7 +79,7 @@
           $ mvn dbsteward:sql-compile
 
           Create the someapp_example database
-          $ mvn dbsteward:compile
+          $ mvn dbsteward:db-create
         -->
       </plugin>
     </plugins>
