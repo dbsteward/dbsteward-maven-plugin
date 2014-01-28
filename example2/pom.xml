@@ -74,6 +74,7 @@
           <!-- END db-upgrade mojo properties -->
         </configuration>
         <!--
+          Command Line Usage
           dbsteward-maven-plugin specifies the plugin prefix dbsteward
 
           Generate database upgrade SQL files

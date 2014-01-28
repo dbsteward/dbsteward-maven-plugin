@@ -72,6 +72,7 @@
           <!-- END db-create mojo properties -->
         </configuration>
         <!--
+          Command Line Usage
           dbsteward-maven-plugin specifies the plugin prefix dbsteward
 
           Generate database creation SQL file
