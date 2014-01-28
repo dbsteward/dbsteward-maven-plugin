@@ -51,13 +51,13 @@ $ mvn install
 4a) Run the plugin sql-compile goal to build your database creation SQL file:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-mvn org.dbsteward.maven:dbsteward-maven-plugin:sql-compile
+$ mvn org.dbsteward.maven:dbsteward-maven-plugin:sql-compile
 ```
 ### -OR-
 4b) Run the plugin db-create goal to build your database on the specified server:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-mvn org.dbsteward.maven:dbsteward-maven-plugin:db-create
+$ mvn org.dbsteward.maven:dbsteward-maven-plugin:db-create
 ```
 The db-create goal runs the sql-compile mojo implicitly.
 
@@ -87,13 +87,13 @@ Follow Steps 1 and 2 from Building a Database
 4a) Run the plugin sql-diff goal to build your database upgrade SQL files:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-mvn org.dbsteward.maven:dbsteward-maven-plugin:sql-diff
+$ mvn org.dbsteward.maven:dbsteward-maven-plugin:sql-diff
 ```
 ### -OR-
 4b) Run the plugin db-upgrade goal to upgrade your database on the specified server:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-mvn org.dbsteward.maven:dbsteward-maven-plugin:db-upgrade
+$ mvn org.dbsteward.maven:dbsteward-maven-plugin:db-upgrade
 ```
 The db-upgrade goal runs the sql-diff mojo implicitly.
 
