@@ -48,56 +48,30 @@ import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
- * Compile the specified DBSteward definition files
+ * Create the specified database and with the compiled SQL of the specified
+ * definition files
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "compile", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class CompileMojo extends AbstractMojo {
-
-  @Parameter(defaultValue = "dbsteward", property = "dbstewardBinaryPath", required = true)
-  private File dbstewardBinaryPath;
-
-  @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
-  private File definitionFile;
-
-  @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
-  private File outputDir;
-
-  public void execute() throws MojoExecutionException {
-    getLog().info("Compiling DBSteward definition: " + definitionFile.getPath());
-
-    try {
-      runDbsteward("--xml=" + definitionFile.getPath());
-    } catch (CommandLineException ioe) {
-      getLog().error("DBSteward Execution Exception: " + ioe.getMessage(), ioe);
-    }
-
-  }
+@Mojo(name = "db-create", defaultPhase = LifecyclePhase.DEPLOY)
+public class DBCreateMojo extends SQLCompileMojo {
 
   /**
-   * Run DBSteward binary with the specified parameters
-   *
-   * @param args
-   * @throws org.codehaus.plexus.util.cli.CommandLineException
-   * @throws org.apache.maven.plugin.MojoExecutionException
+   * Database name to create
    */
-  protected void runDbsteward(String... args) throws CommandLineException, MojoExecutionException {
+  @Parameter(property = "dbName", required = true)
+  protected String dbName;
 
-    Commandline commandLine = new Commandline();
-    commandLine.setExecutable(dbstewardBinaryPath.getAbsolutePath());
+  @Override
+  public void execute() throws MojoExecutionException {
+    // compile the definition
+    super.execute();
 
-    for (String arg : args) {
-      Arg _arg = commandLine.createArg();
-      _arg.setValue(arg);
-    }
-    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(getLog());
-    StringStreamConsumer errorStream = new StringStreamConsumer();
+    getLog().info("Creating database: " + dbName);
+    //@TODO
 
-    int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
-    if (returnCode != 0) {
-      throw new MojoExecutionException("Unexpected DBSteward Execution! Error Buffer = " + errorStream.getOutput());
-    }
+    getLog().info("Executing database script: " + dbName);
+    //@TODO
   }
 
 }

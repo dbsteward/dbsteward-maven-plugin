@@ -31,10 +31,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.dbsteward.maven</groupId>
-  <artifactId>dbsteward-maven-plugin-example1</artifactId>
+  <artifactId>dbsteward-maven-plugin-example2</artifactId>
   <version>1.3.7-SNAPSHOT</version>
 
-  <name>DBSteward Maven Plugin Example 1</name>
+  <name>DBSteward Maven Plugin Example 2</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -63,15 +63,19 @@
             /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
-          <!-- BEGIN sql-compile mojo properties -->
           <!--
-            Relative or absolute path to your DBSteward database definition XML file to compile
+            Relative or absolute path to old DBSteward database definition XML file
           -->
-          <definitionFile>example1.xml</definitionFile>
-          <!-- END sql-compile mojo properties -->
-          <!-- BEGIN db-create mojo properties -->
+          <!-- BEGIN sql-diff mojo properties -->
+          <oldDefinitionFile>../example1/example1.xml</oldDefinitionFile>
+          <!--
+            Relative or absolute path to new DBSteward database definition XML file
+          -->
+          <newDefinitionFile>example2.xml</newDefinitionFile>
+          <!-- END sql-diff mojo properties -->
+          <!-- BEGIN db-upgrade mojo properties -->
           <dbName>someapp_example</dbName>
-          <!-- END db-create mojo properties -->
+          <!-- END db-upgrade mojo properties -->
         </configuration>
         <!--
           dbsteward-maven-plugin specifies the plugin prefix dbsteward
