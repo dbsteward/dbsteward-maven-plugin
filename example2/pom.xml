@@ -63,14 +63,10 @@
             /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
-          <!--
-            Relative or absolute path to old DBSteward database definition XML file
-          -->
           <!-- BEGIN sql-diff mojo properties -->
+          <!-- Relative or absolute path to old DBSteward database definition XML file -->
           <oldDefinitionFile>../example1/example1.xml</oldDefinitionFile>
-          <!--
-            Relative or absolute path to new DBSteward database definition XML file
-          -->
+          <!-- Relative or absolute path to new DBSteward database definition XML file -->
           <newDefinitionFile>example2.xml</newDefinitionFile>
           <!-- END sql-diff mojo properties -->
           <!-- BEGIN db-upgrade mojo properties -->
@@ -79,8 +75,12 @@
         </configuration>
         <!--
           dbsteward-maven-plugin specifies the plugin prefix dbsteward
-          With this, example1.xml can be compiled with
-          $ mvn dbsteward:compile
+
+          Generate database upgrade SQL files
+          $ mvn dbsteward:sql-diff
+
+          Upgrade someapp_example db to example2.xml defintiion
+          $ mvn dbsteward:db-upgrade
         -->
       </plugin>
     </plugins>

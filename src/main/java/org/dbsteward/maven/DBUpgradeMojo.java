@@ -57,7 +57,7 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 public class DBUpgradeMojo extends SQLDiffMojo {
 
   /**
-   * Database name to create
+   * Database name to upgrade
    */
   @Parameter(property = "dbName", required = true)
   protected String dbName;

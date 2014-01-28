@@ -64,9 +64,7 @@
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
           <!-- BEGIN sql-compile mojo properties -->
-          <!--
-            Relative or absolute path to your DBSteward database definition XML file to compile
-          -->
+          <!-- Relative or absolute path to your DBSteward database definition XML file to compile -->
           <definitionFile>example1.xml</definitionFile>
           <!-- END sql-compile mojo properties -->
           <!-- BEGIN db-create mojo properties -->
@@ -75,7 +73,11 @@
         </configuration>
         <!--
           dbsteward-maven-plugin specifies the plugin prefix dbsteward
-          With this, example1.xml can be compiled with
+
+          Generate database creation SQL file
+          $ mvn dbsteward:sql-compile
+
+          Create the someapp_example database
           $ mvn dbsteward:compile
         -->
       </plugin>
