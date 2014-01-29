@@ -57,19 +57,19 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 public class SQLDiffMojo extends DBStewardAbstractMojo {
 
   /**
-   * Relative or absolute path to old DBSteward database definition XML file
+   * Relative or absolute path to old (previous) database definition XML file
    */
   @Parameter(property = "oldDefinitionFile", required = true)
   protected File oldDefinitionFile;
 
   /**
-   * Relative or absolute path to new DBSteward database definition XML file
+   * Relative or absolute path to new (current) database definition XML file
    */
   @Parameter(property = "newDefinitionFile", required = true)
   protected File newDefinitionFile;
 
   public void execute() throws MojoExecutionException {
-    getLog().info("Diffing DBSteward definitions: ");
+    getLog().info("Diffing DBSteward definitions");
     getLog().info("  Old: " + oldDefinitionFile.getPath());
     getLog().info("  New: " + newDefinitionFile.getPath());
 

@@ -64,7 +64,7 @@
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
           <!-- BEGIN sql-compile mojo properties -->
-          <!-- Relative or absolute path to your DBSteward database definition XML file to compile -->
+          <!-- Relative or absolute path to DBSteward database definition XML file -->
           <definitionFile>example1.xml</definitionFile>
           <!-- END sql-compile mojo properties -->
           <!-- BEGIN db-create mojo properties -->

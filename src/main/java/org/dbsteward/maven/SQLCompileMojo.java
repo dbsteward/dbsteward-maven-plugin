@@ -56,14 +56,14 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 public class SQLCompileMojo extends DBStewardAbstractMojo {
 
   /**
-   * Relative or absolute path to your DBSteward database definition XML file to
-   * compile
+   * Relative or absolute path to DBSteward database definition XML file
    */
   @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
   protected File definitionFile;
 
   public void execute() throws MojoExecutionException {
-    getLog().info("Compiling DBSteward definition: " + definitionFile.getPath());
+    getLog().info("Compiling DBSteward definition");
+    getLog().info(" Path:" + definitionFile.getPath());
 
     try {
       String[] args = {

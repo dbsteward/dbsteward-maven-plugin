@@ -64,9 +64,9 @@
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
           <!-- BEGIN sql-diff mojo properties -->
-          <!-- Relative or absolute path to old DBSteward database definition XML file -->
+          <!-- Relative or absolute path to old (previous) database definition XML file -->
           <oldDefinitionFile>../example1/example1.xml</oldDefinitionFile>
-          <!-- Relative or absolute path to new DBSteward database definition XML file -->
+          <!-- Relative or absolute path to new (current) database definition XML file -->
           <newDefinitionFile>example2.xml</newDefinitionFile>
           <!-- END sql-diff mojo properties -->
           <!-- BEGIN db-upgrade mojo properties -->
