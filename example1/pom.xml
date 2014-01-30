@@ -63,23 +63,33 @@
             /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
-          <!-- BEGIN sql-compile mojo properties -->
+          <!-- BEGIN sql-compile goal properties -->
           <!-- Relative or absolute path to DBSteward database definition XML file -->
           <definitionFile>example1.xml</definitionFile>
-          <!-- END sql-compile mojo properties -->
-          <!-- BEGIN db-create mojo properties -->
-          <dbName>someapp_example</dbName>
-          <!-- END db-create mojo properties -->
+          <!-- END sql-compile goal properties -->
+
+          <!-- BEGIN db-create goal properties -->
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgressql://localhost:5432:someapp_example</url>
+          <username>dbsteward_ci</username>
+          <password>password1</password>
+          <!--
+            You can comment out username/password configurations and
+            have maven to look them up in your settings.xml using ${settingsKey}
+            <settingsKey>dbstewardCI</settingsKey>
+          -->
+          <!-- END db-create goal properties -->
         </configuration>
         <!--
-          Command Line Usage
-          dbsteward-maven-plugin specifies the plugin prefix dbsteward
+          Command Line Usage - dbsteward-maven-plugin specifies the plugin prefix dbsteward
 
           Generate database creation SQL file
           $ mvn dbsteward:sql-compile
 
           Create the someapp_example database
           $ mvn dbsteward:db-create
+
+          Goals can be combined into one mvn command.
         -->
       </plugin>
     </plugins>

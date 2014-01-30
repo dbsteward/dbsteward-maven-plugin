@@ -63,25 +63,35 @@
             /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
-          <!-- BEGIN sql-diff mojo properties -->
+          <!-- BEGIN sql-diff goal properties -->
           <!-- Relative or absolute path to old (previous) database definition XML file -->
           <oldDefinitionFile>../example1/example1.xml</oldDefinitionFile>
           <!-- Relative or absolute path to new (current) database definition XML file -->
           <newDefinitionFile>example2.xml</newDefinitionFile>
-          <!-- END sql-diff mojo properties -->
-          <!-- BEGIN db-upgrade mojo properties -->
-          <dbName>someapp_example</dbName>
-          <!-- END db-upgrade mojo properties -->
+          <!-- END sql-diff goal properties -->
+
+          <!-- BEGIN db-upgrade goal properties -->
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgressql://localhost:5432:someapp_example</url>
+          <username>dbsteward_ci</username>
+          <password>password1</password>
+          <!--
+            You can comment out username/password configurations and
+            have maven to look them up in your settings.xml using ${settingsKey}
+            <settingsKey>dbstewardCI</settingsKey>
+          -->
+          <!-- END db-upgrade goal properties -->
         </configuration>
         <!--
-          Command Line Usage
-          dbsteward-maven-plugin specifies the plugin prefix dbsteward
+          Command Line Usage - dbsteward-maven-plugin specifies the plugin prefix dbsteward
 
           Generate database upgrade SQL files
           $ mvn dbsteward:sql-diff
 
           Upgrade someapp_example db to example2.xml defintiion
           $ mvn dbsteward:db-upgrade
+
+          Goals can be combined into one mvn command.
         -->
       </plugin>
     </plugins>

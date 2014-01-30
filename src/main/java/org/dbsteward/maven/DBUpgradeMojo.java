@@ -28,6 +28,7 @@ package org.dbsteward.maven;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+import java.io.File;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -36,42 +37,40 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collection;
-import org.codehaus.plexus.util.cli.Arg;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
-import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.WriterStreamConsumer;
+import org.codehaus.mojo.sql.SqlExecMojo;
 
 /**
  * Difference and upgrade the specified database with the compiled SQL diff of
- * the specifies DBSteward definition files
+ * the specifies DBSteward definition files.
+ *
+ * SQLDiffMojo (sql-diff goal) is a prerequisite to this running successfully
  *
  * @author nicholas.kiraly
  */
 @Mojo(name = "db-upgrade", defaultPhase = LifecyclePhase.INSTALL)
-public class DBUpgradeMojo extends SQLDiffMojo {
+public class DBUpgradeMojo extends SqlExecMojo {
 
   /**
-   * Database name to upgrade
+   * Relative or absolute path to old (previous) database definition XML file
    */
-  @Parameter(property = "dbName", required = true)
-  protected String dbName;
+  @Parameter(property = "oldDefinitionFile", required = true)
+  protected File oldDefinitionFile;
+
+  /**
+   * Relative or absolute path to new (current) database definition XML file
+   */
+  @Parameter(property = "newDefinitionFile", required = true)
+  protected File newDefinitionFile;
 
   @Override
   public void execute() throws MojoExecutionException {
-    // compile the definition
-    super.execute();
-
-    getLog().info("Upgrading database: " + dbName);
+    getLog().info("Upgrading database at " + this.getDriverProperties().get("url"));
     //@TODO
+    super.execute(); // initiate the code-setup sql execution
 
-    getLog().info("Executing database upgrade script: " + dbName);
+    getLog().info("Executing database upgrade script: " + newDefinitionFile.getPath().substring(0, -4) + "_upgrade_stage1_schema1.sql");
     //@TODO
+    super.execute(); // initiate the code-setup sql execution
   }
 
 }

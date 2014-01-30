@@ -28,6 +28,7 @@ package org.dbsteward.maven;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+import java.io.File;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -36,42 +37,41 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collection;
-import org.codehaus.plexus.util.cli.Arg;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
-import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.WriterStreamConsumer;
+import org.codehaus.mojo.sql.SqlExecMojo;
 
 /**
- * Create the specified database and with the compiled SQL of the specified
- * definition files
+ * Create the specified database and load it with the compiled SQL of the
+ * specified definition files.
+ *
+ * SQLCompileMojo (sql-compile goal) is a prerequisite to this running
+ * successfully
  *
  * @author nicholas.kiraly
  */
 @Mojo(name = "db-create", defaultPhase = LifecyclePhase.INSTALL)
-public class DBCreateMojo extends SQLCompileMojo {
+public class DBCreateMojo extends SqlExecMojo {
 
+  /**
+   * Relative or absolute path to DBSteward database definition XML file
+   */
+  @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
+  protected File definitionFile;
+  
   /**
    * Database name to create
    */
-  @Parameter(property = "dbName", required = true)
-  protected String dbName;
+  @Parameter(property = "createDBName", required = true)
+  protected String createDBName;
 
   @Override
   public void execute() throws MojoExecutionException {
-    // compile the definition
-    super.execute();
-
-    getLog().info("Creating database: " + dbName);
+    getLog().info("Creating database: " + createDBName);
     //@TODO
+    super.execute(); // initiate the code-setup sql execution
 
-    getLog().info("Executing database script: " + dbName);
+    getLog().info("Executing database script: " + definitionFile);
     //@TODO
+    super.execute(); // initiate the code-setup sql execution
   }
 
 }

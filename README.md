@@ -46,20 +46,29 @@ $ mvn install
     </plugins>
   </build>
 ```
+For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example1/pom.xml
 
 
-4a) Run the plugin sql-compile goal to build your database creation SQL file:
+4) Run the plugin sql-compile goal to build your database creation SQL file:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
 $ mvn dbsteward:sql-compile
 ```
-### -OR-
-4b) Run the plugin db-create goal to build your database on the specified server:
+
+
+5) Run the plugin db-create goal to build your database at the specified jdbc url:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
 $ mvn dbsteward:db-create
 ```
-The db-create goal runs the sql-compile mojo implicitly.
+
+
+Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
+```bash
+[ nkiraly@generati ~/that-project-tho ]
+$ mvn dbsteward:sql-compile dbsteward:db-create
+```
+
 
 
 
@@ -76,24 +85,35 @@ Follow Steps 1 and 2 from Building a Database
         <configuration>
           <oldDefinitionFile>example1.xml</oldDefinitionFile>
           <newDefinitionFile>example2.xml</newDefinitionFile>
-          <dbName>someapp_example</dbName>
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgressql://localhost:5432:someapp_example</url>
+          <username>dbsteward_ci</username>
+          <password>password1</password>
         </configuration>
       </plugin>
     </plugins>
   </build>
 ```
+For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example2/pom.xml
 
 
-4a) Run the plugin sql-diff goal to build your database upgrade SQL files:
+4) Run the plugin sql-diff goal to build your database upgrade SQL files:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
 $ mvn dbsteward:sql-diff
 ```
-### -OR-
-4b) Run the plugin db-upgrade goal to upgrade your database on the specified server:
+
+
+5) Run the plugin db-upgrade goal to upgrade your database at the specified jdbc url:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
 $ mvn dbsteward:db-upgrade
 ```
-The db-upgrade goal runs the sql-diff mojo implicitly.
+
+
+Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
+```bash
+[ nkiraly@generati ~/that-project-tho ]
+$ mvn dbsteward:sql-diff dbsteward:db-upgrade
+```
 
