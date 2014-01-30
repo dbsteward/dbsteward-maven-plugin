@@ -53,7 +53,7 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "sql-diff", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+@Mojo(name = "sql-diff", defaultPhase = LifecyclePhase.COMPILE)
 public class SQLDiffMojo extends DBStewardAbstractMojo {
 
   /**
@@ -73,15 +73,11 @@ public class SQLDiffMojo extends DBStewardAbstractMojo {
     getLog().info("  Old: " + oldDefinitionFile.getPath());
     getLog().info("  New: " + newDefinitionFile.getPath());
 
-    try {
-      String[] args = {
-        "--oldxml=" + oldDefinitionFile.getPath(),
-        "--newxml=" + newDefinitionFile.getPath()
-      };
-      runDbsteward(args);
-    } catch (CommandLineException cle) {
-      getLog().error("DBSteward Execution Exception: " + cle.getMessage(), cle);
-    }
+    String[] args = {
+      "--oldxml=" + oldDefinitionFile.getPath(),
+      "--newxml=" + newDefinitionFile.getPath()
+    };
+    runDbsteward(args);
   }
 
 }

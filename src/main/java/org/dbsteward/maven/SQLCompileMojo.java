@@ -52,7 +52,7 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "sql-compile", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+@Mojo(name = "sql-compile", defaultPhase = LifecyclePhase.COMPILE)
 public class SQLCompileMojo extends DBStewardAbstractMojo {
 
   /**
@@ -64,15 +64,11 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
   public void execute() throws MojoExecutionException {
     getLog().info("Compiling DBSteward definition");
     getLog().info(" Path:" + definitionFile.getPath());
-
-    try {
-      String[] args = {
-        "--xml=" + definitionFile.getPath()
-      };
-      runDbsteward(args);
-    } catch (CommandLineException cle) {
-      getLog().error("DBSteward Execution Exception: " + cle.getMessage(), cle);
-    }
+    
+    String[] args = {
+      "--xml=" + definitionFile.getPath()
+    };
+    runDbsteward(args);
   }
 
 }

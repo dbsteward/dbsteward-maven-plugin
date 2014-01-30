@@ -63,11 +63,12 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
   private File dbstewardBinaryPath;
 
   /**
-   * DBSteward --outputdir value specification You usually want to leave this
-   * the project.build.directory so your files end up in /target/
+   * DBSteward --outputdir value specification. You generally want to leave this
+   * the project.build.directory so your DBSteward output files end up in
+   * /target/
    */
   @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
-  private File outputDir; // @TODO dbsteward lib - allow caller to specify output directory
+  private File outputDir;
 
   /**
    * Run DBSteward binary with the specified parameters
@@ -76,9 +77,17 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    * @throws org.codehaus.plexus.util.cli.CommandLineException
    * @throws org.apache.maven.plugin.MojoExecutionException
    */
-  protected void runDbsteward(String... args) throws CommandLineException, MojoExecutionException {
+  protected void runDbsteward(String... args) throws MojoExecutionException {
     Commandline commandLine = new Commandline();
     commandLine.setExecutable(dbstewardBinaryPath.getAbsolutePath());
+
+    Arg outputdir_arg = commandLine.createArg();
+    outputdir_arg.setValue("--outputdir=" + outputDir);
+
+    if (!outputDir.exists()) {
+      getLog().warn("outputdir " + outputDir + " does not exist, creating");
+      outputDir.mkdir();
+    }
 
     for (String arg : args) {
       Arg _arg = commandLine.createArg();
@@ -87,9 +96,13 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
     PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(getLog());
     StringStreamConsumer errorStream = new StringStreamConsumer();
 
-    int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
-    if (returnCode != 0) {
-      throw new MojoExecutionException("Unexpected DBSteward Execution! Error Buffer = " + errorStream.getOutput());
+    try {
+      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+      if (returnCode != 0) {
+        throw new MojoExecutionException("Unexpected DBSteward Error. Error Buffer = " + errorStream.getOutput());
+      }
+    } catch (CommandLineException cle) {
+      getLog().error("DBSteward Execution Exception: " + cle.getMessage(), cle);
     }
   }
 

@@ -53,7 +53,7 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "db-upgrade", defaultPhase = LifecyclePhase.DEPLOY)
+@Mojo(name = "db-upgrade", defaultPhase = LifecyclePhase.INSTALL)
 public class DBUpgradeMojo extends SQLDiffMojo {
 
   /**

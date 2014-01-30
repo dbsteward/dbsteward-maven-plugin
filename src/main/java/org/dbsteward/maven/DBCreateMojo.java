@@ -53,7 +53,7 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "db-create", defaultPhase = LifecyclePhase.DEPLOY)
+@Mojo(name = "db-create", defaultPhase = LifecyclePhase.INSTALL)
 public class DBCreateMojo extends SQLCompileMojo {
 
   /**
