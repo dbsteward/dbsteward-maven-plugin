@@ -1,17 +1,16 @@
 dbsteward-maven-plugin
 ======================
-
 DBSteward maven plugin for deploying and upgrading your DBSteward-defined database
 
 
 
 Usage Guide
 ===========
+Here is a crash course for getting up and running building databases from DBSteward definitions as part of your maven build process.
+
 
 
 ## Building a Database
-To get up and running building DBSteward definitions as part of your maven build process, here is a crash course.
-
 1) Check out the plugin code and mvn install the artifact to your m2 repo
 ```bash
 [ nkiraly@generati ~/dbsteward-maven-plugin ]
