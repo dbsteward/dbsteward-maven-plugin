@@ -38,9 +38,21 @@ $ mvn install
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.2-1004-jdbc4</version>
+          </dependency>
+        </dependencies>
         <configuration>
-          <definitionFile>example1.xml</definitionFile>
-          <dbName>someapp_example</dbName>
+          <definitionFile>example.xml</definitionFile>
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgresql://localhost:5432:example</url>
+          <username>dbsteward_ci</username>
+          <password>password1</password>
+          <createDBName>example</createDBName>
+          <createDBUrl>jdbc:postgresql://localhost:5432:postgres</createDBUrl>
         </configuration>
       </plugin>
     </plugins>
@@ -82,11 +94,18 @@ Follow Steps 1 and 2 from Building a Database
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.2-1004-jdbc4</version>
+          </dependency>
+        </dependencies>
         <configuration>
           <oldDefinitionFile>example1.xml</oldDefinitionFile>
           <newDefinitionFile>example2.xml</newDefinitionFile>
           <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgressql://localhost:5432:someapp_example</url>
+          <url>jdbc:postgresql://localhost:5432:example</url>
           <username>dbsteward_ci</username>
           <password>password1</password>
         </configuration>

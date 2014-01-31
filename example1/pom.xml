@@ -55,6 +55,22 @@
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
         <version>1.3.7-SNAPSHOT</version>
+        <dependencies>
+          <!-- artifact that provides <configuration> property <driver> below -->
+          <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.4-702.jdbc4</version>
+          </dependency>
+          <!-- pg 9 groupId changed to org.postgresql -->
+          <!--
+          <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.2-1004-jdbc4</version>
+          </dependency>
+          -->
+        </dependencies>
         <configuration>
           <!--
             DBSteward relative or absolute binary - should be available on your path
@@ -70,7 +86,7 @@
 
           <!-- BEGIN db-create goal properties -->
           <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgressql://localhost:5432:someapp_example</url>
+          <url>jdbc:postgresql://localhost:5432:someapp_example</url>
           <username>dbsteward_ci</username>
           <password>password1</password>
           <!--
@@ -78,6 +94,10 @@
             have maven to look them up in your settings.xml using ${settingsKey}
             <settingsKey>dbstewardCI</settingsKey>
           -->
+          <!-- Database name to create. If omitted, CREATE DATABASE will not be issued -->
+          <createDBName>someapp_example</createDBName>
+          <!-- Database connection to use to create the database -->
+          <createDBUrl>jdbc:postgresql://localhost:5432:postgres</createDBUrl>
           <!-- END db-create goal properties -->
         </configuration>
         <!--

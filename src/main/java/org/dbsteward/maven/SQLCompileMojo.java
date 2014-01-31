@@ -28,24 +28,13 @@ package org.dbsteward.maven;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+import java.io.File;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collection;
-import org.codehaus.plexus.util.cli.Arg;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
-import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
  * Compile the specified DBSteward definition files to SQL statements
@@ -64,7 +53,7 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
   public void execute() throws MojoExecutionException {
     getLog().info("Compiling DBSteward definition");
     getLog().info(" Path:" + definitionFile.getPath());
-    
+
     String[] args = {
       "--xml=" + definitionFile.getPath()
     };

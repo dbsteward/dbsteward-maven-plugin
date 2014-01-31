@@ -31,12 +31,10 @@ package org.dbsteward.maven;
 import java.io.File;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-
 import org.codehaus.mojo.sql.SqlExecMojo;
 
 /**
@@ -55,23 +53,78 @@ public class DBCreateMojo extends SqlExecMojo {
    * Relative or absolute path to DBSteward database definition XML file
    */
   @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
-  protected File definitionFile;
-  
-  /**
-   * Database name to create
-   */
-  @Parameter(property = "createDBName", required = true)
-  protected String createDBName;
+  private File definitionFile;
 
+  /**
+   * Database name to create. If omitted, CREATE DATABASE will not be issued.
+   */
+  @Parameter(property = "createDBName")
+  private String createDBName;
+
+  /**
+   * Database connection to use to create the database
+   */
+  @Parameter(property = "createDBUrl")
+  private String createDBUrl;
+
+  /**
+   * Create the database specified by overriding SqlExecMojo.execute() to do
+   * db-create goal
+   *
+   * @throws MojoExecutionException
+   */
   @Override
   public void execute() throws MojoExecutionException {
-    getLog().info("Creating database: " + createDBName);
-    //@TODO
-    super.execute(); // initiate the code-setup sql execution
+    String saveUrl = super.getUrl();
 
-    getLog().info("Executing database script: " + definitionFile);
-    //@TODO
+    if (createDBName != null && createDBName.length() > 0) {
+      getLog().info("Creating database: " + createDBName);
+      super.setUrl(createDBUrl);
+      super.setSqlCommand("CREATE DATABASE " + createDBName);
+      super.execute(); // initiate the code-setup sql execution
+    }
+
+    getLog().info("Executing database script " + definitionFile + " at " + saveUrl);
+    super.setUrl(saveUrl);
+    super.setSqlCommand(null);
+    File[] sourceFiles = {definitionFile};
+    super.setSrcFiles(sourceFiles);
     super.execute(); // initiate the code-setup sql execution
+  }
+
+  //
+  // SqlExecMojo override links into SqlExecMojo private variables
+  //
+  @Parameter(property = "url")
+  private String url;
+
+  @Override
+  public void setUrl(String url) {
+    super.setUrl(url);
+  }
+
+  @Parameter(property = "driver")
+  private String driver;
+
+  @Override
+  public void setDriver(String driver) {
+    super.setDriver(driver);
+  }
+
+  @Parameter(property = "username")
+  private String username;
+
+  @Override
+  public void setUsername(String username) {
+    super.setUsername(username);
+  }
+
+  @Parameter(property = "password")
+  private String password;
+
+  @Override
+  public void setPassword(String password) {
+    super.setPassword(password);
   }
 
 }
