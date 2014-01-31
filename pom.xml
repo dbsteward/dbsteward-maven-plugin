@@ -34,10 +34,33 @@
   <artifactId>dbsteward-maven-plugin</artifactId>
   <version>1.3.7-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
-
   <name>DBSteward Maven Plugin</name>
-
   <url>http://dbsteward.org</url>
+  <description>Compile and difference database definitions into SQL statements with DBSteward CLI</description>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/nkiraly/dbsteward-maven-plugin</url>
+  </issueManagement>
+  
+  <developers>
+    <developer>
+      <id>nkiraly</id>
+      <name>Nicholas Kiraly</name>
+      <email>kiraly.nicholas@gmail.com</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>BSD 2-Clause License</name>
+      <url>http://opensource.org/licenses/BSD-2-Clause</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
