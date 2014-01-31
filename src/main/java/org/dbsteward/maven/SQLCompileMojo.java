@@ -62,6 +62,7 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
   private MavenProject project;
 
   public void execute() throws MojoExecutionException {
+    MavenProject proj = (MavenProject) getPluginContext().get("project");
     getLog().info("Compiling DBSteward definition");
     getLog().info(" Path:" + definitionFile.getPath());
 
@@ -82,7 +83,8 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
     if (!buildSqlFile.exists()) {
       throw new MojoExecutionException("DBSteward output build file " + buildSqlPath + "does not exist. Check DBSteward execution output.");
     }
-    project.getProperties().setProperty("project.dbsteward.output.buildFileName", buildSqlPath);
+    proj.getProperties().setProperty("project.dbsteward.output.buildFileName", buildSqlPath);
+    //throw new MojoExecutionException("project = " + this.project.getName());
   }
 
 }

@@ -118,9 +118,9 @@
         <!-- common configuration shared by all executions -->
         <configuration>
           <driver>org.postgresql.Driver</driver>
-          <url>${project.dbsteward.targetdb.url}</url>
-          <username>${project.dbsteward.targetdb.username}</username>
-          <password>${project.dbsteward.targetdb.password}</password>
+          <url>${project.dbsteward.target.url}</url>
+          <username>${project.dbsteward.target.username}</username>
+          <password>${project.dbsteward.target.password}</password>
           <!--
             You can comment out username/password configurations and
             have maven to look them up in your settings.xml using ${settingsKey}
@@ -138,10 +138,10 @@
               <goal>execute</goal>
             </goals>
             <configuration>
-              <url>${project.dbsteward.targetdb.bootstrapUrl}</url>
+              <url>${project.dbsteward.target.bootstrapUrl}</url>
               <!-- no transaction -->
               <autocommit>true</autocommit>
-              <sqlCommand>CREATE DATABASE ${project.dbsteward.targetdb.name}</sqlCommand>
+              <sqlCommand>CREATE DATABASE ${project.dbsteward.target.name}</sqlCommand>
             </configuration>
           </execution>
 
@@ -156,6 +156,7 @@
               <srcFiles>
                 <srcFile>${project.dbsteward.output.buildFileName}</srcFile>
               </srcFiles>
+              <url>${project.dbsteward.target.url}</url>
             </configuration>
           </execution>
         </executions>
