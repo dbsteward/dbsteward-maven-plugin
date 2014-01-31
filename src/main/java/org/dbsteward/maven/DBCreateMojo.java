@@ -36,6 +36,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.mojo.sql.SqlExecMojo;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * Create the specified database and load it with the compiled SQL of the
@@ -75,6 +76,7 @@ public class DBCreateMojo extends SqlExecMojo {
    */
   @Override
   public void execute() throws MojoExecutionException {
+    super.setSqlCommand("");
     String saveUrl = super.getUrl();
 
     if (createDBName != null && createDBName.length() > 0) {
@@ -84,11 +86,19 @@ public class DBCreateMojo extends SqlExecMojo {
       super.execute(); // initiate the code-setup sql execution
     }
 
-    getLog().info("Executing database script " + definitionFile + " at " + saveUrl);
+    // calculate build file path to load as srcFile
+    String buildSqlPath = FileUtils.basename(definitionFile.getPath(), "xml");
+    // kill trailing . left by basename
+    buildSqlPath = buildSqlPath.substring(0, buildSqlPath.length() - 1);
+    buildSqlPath = buildSqlPath + "_build.sql";
+    File buildSqlFile = new File(buildSqlPath);
+    // getting NPE .. does SqlExecMojo.addFilesToTransactions needs absolute path ?
+    File[] buildFiles = {buildSqlFile};
+
+    getLog().info("Executing database script " + buildSqlFile + " on " + saveUrl);
     super.setUrl(saveUrl);
-    super.setSqlCommand(null);
-    File[] sourceFiles = {definitionFile};
-    super.setSrcFiles(sourceFiles);
+    super.setSqlCommand("");
+    super.setSrcFiles(buildFiles);
     super.execute(); // initiate the code-setup sql execution
   }
 
