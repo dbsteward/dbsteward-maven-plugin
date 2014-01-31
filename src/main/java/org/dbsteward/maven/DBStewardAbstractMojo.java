@@ -60,7 +60,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    * git cloned it
    */
   @Parameter(defaultValue = "dbsteward", property = "dbstewardBinaryPath", required = true)
-  private File dbstewardBinaryPath;
+  protected File dbstewardBinaryPath;
 
   /**
    * DBSteward --outputdir value specification. You generally want to leave this
@@ -68,7 +68,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    * /target/
    */
   @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
-  private File outputDir;
+  protected File outputDir;
 
   /**
    * Run DBSteward binary with the specified parameters

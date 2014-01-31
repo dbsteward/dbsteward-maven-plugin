@@ -29,12 +29,15 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * Compile the specified DBSteward definition files to SQL statements
@@ -50,6 +53,14 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
   @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
   protected File definitionFile;
 
+  // import maven session execution instances
+  /**
+   * @parameter expression="${project}"
+   * @required
+   * @readonly
+   */
+  private MavenProject project;
+
   public void execute() throws MojoExecutionException {
     getLog().info("Compiling DBSteward definition");
     getLog().info(" Path:" + definitionFile.getPath());
@@ -58,6 +69,20 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
       "--xml=" + definitionFile.getPath()
     };
     runDbsteward(args);
+
+    // confirm output before leaving
+    // calculate build file path
+    String buildSqlPath = FileUtils.basename(definitionFile.getPath(), "xml");
+    buildSqlPath = outputDir + File.separator + buildSqlPath;
+    // kill trailing . left by basename
+    buildSqlPath = buildSqlPath.substring(0, buildSqlPath.length() - 1);
+    buildSqlPath = buildSqlPath + "_build.sql";
+    // confirm definitionFile's output file in the output dir
+    File buildSqlFile = new File(buildSqlPath);
+    if (!buildSqlFile.exists()) {
+      throw new MojoExecutionException("DBSteward output build file " + buildSqlPath + "does not exist. Check DBSteward execution output.");
+    }
+    project.getProperties().setProperty("project.dbsteward.output.buildFileName", buildSqlPath);
   }
 
 }

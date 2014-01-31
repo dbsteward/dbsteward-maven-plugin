@@ -39,6 +39,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.dbsteward.path>dbsteward</project.dbsteward.path>
+    <project.dbsteward.source.filename>example1.xml</project.dbsteward.source.filename>
+    <project.dbsteward.target.name>someapp</project.dbsteward.target.name>
+    <project.dbsteward.target.url>jdbc:postgresql://localhost:5432/someapp</project.dbsteward.target.url>
+    <project.dbsteward.target.username>dbsteward_ci</project.dbsteward.target.username>
+    <project.dbsteward.target.password>password1</project.dbsteward.target.password>
+    <project.dbsteward.target.bootstrapUrl>jdbc:postgresql://localhost:5432/postgres</project.dbsteward.target.bootstrapUrl>
   </properties>
 
   <dependencies>
@@ -47,6 +53,11 @@
       <artifactId>dbsteward-maven-plugin</artifactId>
       <version>1.3.7-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>sql-maven-plugin</artifactId>
+      <version>1.5</version>
+     </dependency>
   </dependencies>
 
   <build>
@@ -55,6 +66,38 @@
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
         <version>1.3.7-SNAPSHOT</version>
+
+        <configuration>
+          <!--
+            DBSteward relative or absolute binary - should be available on your path
+            example values:
+            dbsteward if you installed DBSteward via PEAR
+            /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
+          -->
+          <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>build-sql-file</id>
+            <!-- execution is in validate phase so that buildFilename property can be stored by plugin -->
+            <phase>compile</phase>
+            <goals>
+              <goal>sql-compile</goal>
+            </goals>
+            <configuration>
+              <!-- Relative or absolute path to DBSteward database definition XML file -->
+              <definitionFile>${project.dbsteward.source.filename}</definitionFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <version>1.5</version>
+
         <dependencies>
           <!-- artifact that provides <configuration> property <driver> below -->
           <dependency>
@@ -71,48 +114,64 @@
           </dependency>
           -->
         </dependencies>
-        <configuration>
-          <!--
-            DBSteward relative or absolute binary - should be available on your path
-            example values:
-            dbsteward if you installed DBSteward via PEAR
-            /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
-          -->
-          <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
-          <!-- BEGIN sql-compile goal properties -->
-          <!-- Relative or absolute path to DBSteward database definition XML file -->
-          <definitionFile>example1.xml</definitionFile>
-          <!-- END sql-compile goal properties -->
 
-          <!-- BEGIN db-create goal properties -->
+        <!-- common configuration shared by all executions -->
+        <configuration>
           <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432/someapp_example</url>
-          <username>dbsteward_ci</username>
-          <password>password1</password>
+          <url>${project.dbsteward.targetdb.url}</url>
+          <username>${project.dbsteward.targetdb.username}</username>
+          <password>${project.dbsteward.targetdb.password}</password>
           <!--
             You can comment out username/password configurations and
             have maven to look them up in your settings.xml using ${settingsKey}
             <settingsKey>dbstewardCI</settingsKey>
           -->
-          <!-- Database name to create. If omitted, CREATE DATABASE will not be issued -->
-          <createDBName>someapp_example</createDBName>
-          <!-- Database connection to use to create the database -->
-          <createDBUrl>jdbc:postgresql://localhost:5432/postgres</createDBUrl>
-          <!-- END db-create goal properties -->
+          <!-- all executions are ignored if -Dmaven.test.skip=true -->
+          <skip>${maven.test.skip}</skip>
         </configuration>
-        <!--
-          Command Line Usage - dbsteward-maven-plugin specifies the plugin prefix dbsteward
 
-          Generate database creation SQL file
-          $ mvn dbsteward:sql-compile
+        <executions>
+          <execution>
+            <id>create-db</id>
+            <phase>package</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <url>${project.dbsteward.targetdb.bootstrapUrl}</url>
+              <!-- no transaction -->
+              <autocommit>true</autocommit>
+              <sqlCommand>CREATE DATABASE ${project.dbsteward.targetdb.name}</sqlCommand>
+            </configuration>
+          </execution>
 
-          Create the someapp_example database
-          $ mvn dbsteward:db-create
-
-          Goals can be combined into one mvn command.
-        -->
+          <execution>
+            <id>load-db</id>
+            <phase>package</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <autocommit>true</autocommit>
+              <srcFiles>
+                <srcFile>${project.dbsteward.output.buildFileName}</srcFile>
+              </srcFiles>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
+    <!--
+      Usage
+
+      With the executions as defined,
+
+      Generate database create SQL file by specifying the compile goal
+      $ mvn compile
+
+      Generate and Create the database with the package goal which will run compile as a previous lifecycle step
+      $ mvn package
+    -->
   </build>
 
 </project>
