@@ -88,7 +88,7 @@
 
           <!-- BEGIN db-upgrade goal properties -->
           <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432:someapp_example</url>
+          <url>jdbc:postgresql://localhost:5432/someapp_example</url>
           <username>dbsteward_ci</username>
           <password>password1</password>
           <!--

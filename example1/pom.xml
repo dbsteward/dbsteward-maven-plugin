@@ -86,7 +86,7 @@
 
           <!-- BEGIN db-create goal properties -->
           <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432:someapp_example</url>
+          <url>jdbc:postgresql://localhost:5432/someapp_example</url>
           <username>dbsteward_ci</username>
           <password>password1</password>
           <!--
@@ -97,7 +97,7 @@
           <!-- Database name to create. If omitted, CREATE DATABASE will not be issued -->
           <createDBName>someapp_example</createDBName>
           <!-- Database connection to use to create the database -->
-          <createDBUrl>jdbc:postgresql://localhost:5432:postgres</createDBUrl>
+          <createDBUrl>jdbc:postgresql://localhost:5432/postgres</createDBUrl>
           <!-- END db-create goal properties -->
         </configuration>
         <!--
