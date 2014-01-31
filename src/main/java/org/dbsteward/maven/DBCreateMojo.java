@@ -57,6 +57,17 @@ public class DBCreateMojo extends SqlExecMojo {
   private File definitionFile;
 
   /**
+   * DBSteward --outputdir value specification. You generally want to leave this
+   * the project.build.directory so your DBSteward output files end up in
+   * /target/
+   *
+   * NOTE: this is cloned from DBStewardAbstractMojo as this does not inherit
+   * from it but the value needs to be consistent
+   */
+  @Parameter(defaultValue = "${project.build.directory}", property = "outputDir", required = true)
+  private File outputDir;
+
+  /**
    * Database name to create. If omitted, CREATE DATABASE will not be issued.
    */
   @Parameter(property = "createDBName")
@@ -88,11 +99,16 @@ public class DBCreateMojo extends SqlExecMojo {
 
     // calculate build file path to load as srcFile
     String buildSqlPath = FileUtils.basename(definitionFile.getPath(), "xml");
+    // look for definitionFile's output file in the output dir
+    buildSqlPath = outputDir + File.separator + buildSqlPath;
     // kill trailing . left by basename
     buildSqlPath = buildSqlPath.substring(0, buildSqlPath.length() - 1);
     buildSqlPath = buildSqlPath + "_build.sql";
     File buildSqlFile = new File(buildSqlPath);
-    // getting NPE .. does SqlExecMojo.addFilesToTransactions needs absolute path ?
+    if (!buildSqlFile.exists()) {
+      throw new MojoExecutionException("DBSteward output build file " + buildSqlPath + "does not exist. Did you forget to run sql-compile before this db-create goal?");
+    }
+
     File[] buildFiles = {buildSqlFile};
 
     getLog().info("Executing database script " + buildSqlFile + " on " + saveUrl);
@@ -103,7 +119,7 @@ public class DBCreateMojo extends SqlExecMojo {
   }
 
   //
-  // SqlExecMojo override links into SqlExecMojo private variables
+  // SqlExecMojo override options specified into SqlExecMojo private variables
   //
   @Parameter(property = "url")
   private String url;
