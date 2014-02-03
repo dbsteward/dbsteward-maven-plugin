@@ -82,6 +82,9 @@
           <dbUsername>${project.dbsteward.database.username}</dbUsername>
           <dbPassword>${project.dbsteward.database.password}</dbPassword>
           <dbBootstrap>${project.dbsteward.database.bootstrap}</dbBootstrap>
+          <!-- to not create the database to be loaded, specify skipDBCreate
+          <skipDBCreate>true</skipDBCreate>
+          -->
         </configuration>
       </plugin>
       <!--

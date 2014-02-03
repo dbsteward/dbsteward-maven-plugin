@@ -57,16 +57,10 @@ public class DBCreateMojo extends DBStewardAbstractMojo {
   private File definitionFile;
 
   /**
-   * Database name to create. If omitted, CREATE DATABASE will not be issued.
+   * Goal should skip database creation
    */
-  @Parameter(property = "createDBName")
-  private String createDBName;
-
-  /**
-   * Database connection to use to create the database
-   */
-  @Parameter(property = "createDBUrl")
-  private String createDBUrl;
+  @Parameter(defaultValue = "${project.dbsteward.skipDBCreate}", property = "skipDBCreate")
+  private boolean skipDBCreate;
 
   /**
    * Create the database specified in plugin config
@@ -88,12 +82,15 @@ public class DBCreateMojo extends DBStewardAbstractMojo {
       throw new MojoExecutionException("project.dbsteward.output.buildSqlFileName " + buildSqlFileName + "does not exist. Did you run sql-compile before this goal?");
     }
 
-    if (createDBName != null && createDBName.length() > 0) {
-      getLog().info("Creating database: " + dbName + " on " + dbHost);
+    if (skipDBCreate) {
+      // don't create database - optional skip has been specified
+      getLog().warn("skipDBCreate specified. Skipping database creation.");
+    } else {
+      getLog().info("Creating database: " + dbName + " on " + dbHost + ":" + dbPort);
       dbExecutor.createDatabase(dbName);
     }
 
-    getLog().info("Loading database " + dbName + " on " + dbHost);
+    getLog().info("Loading database " + dbName + " on " + dbHost + ":" + dbPort);
     getLog().info("Executing script: " + buildSqlFile);
     dbExecutor.executeFile(buildSqlFile);
   }
