@@ -82,7 +82,7 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
     // confirm definitionFile's output file in the output dir
     File buildSqlFile = new File(buildSqlFileName);
     if (!buildSqlFile.exists()) {
-      throw new MojoExecutionException("DBSteward output build file " + buildSqlFileName + "does not exist. Check DBSteward execution output.");
+      throw new MojoExecutionException("DBSteward output build file " + buildSqlFileName + " does not exist. Check DBSteward execution output.");
     }
     // store in buildSqlFileName for reference by build chain
     proj.getProperties().setProperty("project.dbsteward.output.buildSqlFileName", buildSqlFileName);

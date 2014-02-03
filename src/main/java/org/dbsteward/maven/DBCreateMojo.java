@@ -79,7 +79,7 @@ public class DBCreateMojo extends DBStewardAbstractMojo {
     // check file exists
     File buildSqlFile = new File(buildSqlFileName);
     if (!buildSqlFile.exists()) {
-      throw new MojoExecutionException("project.dbsteward.output.buildSqlFileName " + buildSqlFileName + "does not exist. Did you run sql-compile before this goal?");
+      throw new MojoExecutionException("project.dbsteward.output.buildSqlFileName " + buildSqlFileName + " does not exist. Did you run sql-compile before this goal?");
     }
 
     if (skipDBCreate) {

@@ -83,7 +83,7 @@ public class DBUpgradeMojo extends DBStewardAbstractMojo {
     for (String upgradeSqlFileName : upgradeSqlFileNames) {
       File uf = new File(upgradeSqlFileName);
       if (!uf.exists()) {
-        throw new MojoExecutionException("project.dbsteward.output.upgradeFileNameCSL item " + upgradeSqlFileName + "does not exist. Did you run sql-diff before this goal?");
+        throw new MojoExecutionException("project.dbsteward.output.upgradeFileNameCSL item " + upgradeSqlFileName + " does not exist. Did you run sql-diff before this goal?");
       }
       upgradeSqlFiles.add(uf);
     }
