@@ -95,10 +95,11 @@ public class SQLDiffMojo extends DBStewardAbstractMojo {
       upgradeSqlFiles = FileUtils.getFiles(outputDir, upgradeSqlFilePrefix + "*.*", "");
     } catch (IOException ioe) {
       getLog().error("Exception while scanning for DBSteward upgrade output files: " + ioe.getMessage(), ioe);
+      throw new MojoExecutionException("Exception while scanning for DBSteward upgrade output files: " + ioe.getMessage());
     }
 
     if (upgradeSqlFiles.size() == 0) {
-      getLog().error("DBSteward outputDir " + outputDir + " not found to contain any upgrade files. Check DBSteward execution output.");
+      throw new MojoExecutionException("DBSteward outputDir " + outputDir + " not found to contain any upgrade files. Check DBSteward execution output.");
     }
 
     // store in upgradeSqlFileNameCSL for reference by build chain

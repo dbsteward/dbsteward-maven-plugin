@@ -167,6 +167,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
       }
     } catch (CommandLineException cle) {
       getLog().error("DBSteward Execution Exception: " + cle.getMessage(), cle);
+      throw new MojoExecutionException("DBSteward Execution Exception: " + cle.getMessage());
     }
   }
 

@@ -29,6 +29,7 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
 /**
@@ -59,8 +60,8 @@ public interface DBExecutor {
 
   public void setConnectionInfo(String host, String port, String name, String username, String password, String boostrap);
 
-  public void createDatabase(String name);
+  public void createDatabase(String name) throws MojoExecutionException;
 
-  public void executeFile(File f);
+  public void executeFile(File f) throws MojoExecutionException;
 
 }

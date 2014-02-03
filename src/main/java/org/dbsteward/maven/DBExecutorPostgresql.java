@@ -29,7 +29,12 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.plexus.util.cli.Arg;
+import org.codehaus.plexus.util.cli.CommandLineException;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.cli.Commandline;
 
 /**
  * Postgresql Database Executor Definition
@@ -77,11 +82,49 @@ public class DBExecutorPostgresql implements DBExecutor {
     this.bootstrap = boostrap;
   }
 
-  public void createDatabase(String name) {
-    this.log.warn("@TODO: create database " + name);
+  public void createDatabase(String name) throws MojoExecutionException {
+    File createdb = new File("createdb");
+    String[] args = {
+      "--host=" + this.host,
+      "--port=" + this.port,
+      "--username=" + this.username,
+      name
+    };
+    executeTool(createdb, args);
   }
 
-  public void executeFile(File f) {
-    this.log.warn("@TODO: execute file " + f);
+  public void executeFile(File f) throws MojoExecutionException {
+    File psql = new File("psql");
+    String[] args = {
+      "--variable=ON_ERROR_STOP=1",
+      "--host=" + this.host,
+      "--port=" + this.port,
+      "--username=" + this.username,
+      "--dbname=" + this.name,
+      "--file=" + f
+    };
+    executeTool(psql, args);
+  }
+
+  protected void executeTool(File tool, String... args) throws MojoExecutionException {
+    Commandline commandLine = new Commandline();
+    commandLine.setExecutable(tool.getPath());
+
+    for (String arg : args) {
+      Arg _arg = commandLine.createArg();
+      _arg.setValue(arg);
+    }
+    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(this.log, PluginLogLevel.LOG_LEVEL_INFO);
+    CommandLineUtils.StringStreamConsumer errorStream = new CommandLineUtils.StringStreamConsumer();
+
+    try {
+      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+      if (returnCode != 0) {
+        throw new MojoExecutionException("Unexpected Tool Return Code " + returnCode + " - Error Buffer = " + errorStream.getOutput());
+      }
+    } catch (CommandLineException cle) {
+      this.log.error("Tool Execution Exception: " + cle.getMessage(), cle);
+      throw new MojoExecutionException("Tool Execution Exception: " + cle.getMessage());
+    }
   }
 }
