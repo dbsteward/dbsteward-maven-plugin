@@ -37,6 +37,8 @@ install:
   - sudo apt-get update
   - sudo apt-get install php5
   - sudo apt-get install php-pear
+  - sudo apt-get install php5-pgsql
+  - sudo apt-get install php5-mysql
   - php --version
   - pear version
 # plugin release branches install the corresponding dbsteward pear package
