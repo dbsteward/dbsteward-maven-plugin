@@ -37,21 +37,16 @@ $ mvn install
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.2-1004-jdbc4</version>
-          </dependency>
-        </dependencies>
+        <version>1.3.7-SNAPSHOT</version>
         <configuration>
+          <sqlFormat>pgsql8</sqlFormat>
           <definitionFile>example.xml</definitionFile>
-          <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432:example</url>
-          <username>dbsteward_ci</username>
-          <password>password1</password>
-          <createDBName>example</createDBName>
-          <createDBUrl>jdbc:postgresql://localhost:5432:postgres</createDBUrl>
+          <dbHost>localhost</dbHost>
+          <dbPort>5432</dbPort>
+          <dbName>someapp</dbName>
+          <dbUsername>dbsteward_ci</dbUsername>
+          <dbPassword>password1</dbPassword>
+          <dbBootstrap>postgres</dbBootstrap>
         </configuration>
       </plugin>
     </plugins>
@@ -63,21 +58,21 @@ For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugi
 4) Run the plugin sql-compile goal to build your database creation SQL file:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-$ mvn dbsteward:sql-compile
+$ mvn dbsteward-maven-plugin:sql-compile
 ```
 
 
-5) Run the plugin db-create goal to build your database at the specified jdbc url:
+5) Run the plugin db-create goal to build your database on the specified server:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-$ mvn dbsteward:db-create
+$ mvn dbsteward-maven-plugin:db-create
 ```
 
 
 Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-$ mvn dbsteward:sql-compile dbsteward:db-create
+$ mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
 ```
 
 
@@ -93,20 +88,16 @@ Follow Steps 1 and 2 from Building a Database
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.2-1004-jdbc4</version>
-          </dependency>
-        </dependencies>
+        <version>1.3.7-SNAPSHOT</version>
         <configuration>
+          <sqlFormat>pgsql8</sqlFormat>
           <oldDefinitionFile>example1.xml</oldDefinitionFile>
           <newDefinitionFile>example2.xml</newDefinitionFile>
-          <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432:example</url>
-          <username>dbsteward_ci</username>
-          <password>password1</password>
+          <dbHost>localhost</dbHost>
+          <dbPort>5432</dbPort>
+          <dbName>someapp</dbName>
+          <dbUsername>dbsteward_ci</dbUsername>
+          <dbPassword>password1</dbPassword>
         </configuration>
       </plugin>
     </plugins>
@@ -118,20 +109,20 @@ For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugi
 4) Run the plugin sql-diff goal to build your database upgrade SQL files:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-$ mvn dbsteward:sql-diff
+$ mvn dbsteward-maven-plugin:sql-diff
 ```
 
 
-5) Run the plugin db-upgrade goal to upgrade your database at the specified jdbc url:
+5) Run the plugin db-upgrade goal to upgrade your database on the specified server:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-$ mvn dbsteward:db-upgrade
+$ mvn dbsteward-maven-plugin:db-upgrade
 ```
 
 
 Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
 ```bash
 [ nkiraly@generati ~/that-project-tho ]
-$ mvn dbsteward:sql-diff dbsteward:db-upgrade
+$ mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade
 ```
 
