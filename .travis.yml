@@ -29,6 +29,7 @@ env:
 #    - DBSTEWARD_SQLFORMAT=mysql5
 
 install:
+  sudo apt-get update
   sudo apt-get install php5
 
 before_script:
