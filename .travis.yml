@@ -45,6 +45,7 @@ before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"; fi
   - sudo pear channel-discover pear.dbsteward.org
   - sudo pear install dbsteward/DBSteward
+  - which dbsteward
 
 # by default, travis runs "mvn test", but we want to make sure that after installing the plugin, the examples work
 script: ./script/ci/run_examples.sh
