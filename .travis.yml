@@ -32,7 +32,7 @@ before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE USER dbsteward_ci WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password1';"; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE ROLE someapp;"; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE ROLE someapp_readonly;"; fi
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U deployment -d postgres -c "DROP DATABASE someapp;"; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"; fi
   - mvn clean
   - mvn install
 
