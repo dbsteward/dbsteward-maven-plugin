@@ -140,7 +140,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    */
   protected void runDbsteward(String... args) throws MojoExecutionException {
     Commandline commandLine = new Commandline();
-    commandLine.setExecutable(dbstewardBinaryPath.getAbsolutePath());
+    commandLine.setExecutable(dbstewardBinaryPath.getPath());
 
     Arg outputdir_arg = commandLine.createArg();
     outputdir_arg.setValue("--outputdir=" + outputDir);
