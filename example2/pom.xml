@@ -40,13 +40,14 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.dbsteward.path>dbsteward</project.dbsteward.path>
     <project.dbsteward.sqlFormat>pgsql8</project.dbsteward.sqlFormat>
-    <project.dbsteward.oldDefinitionFile>example1.xml</project.dbsteward.oldDefinitionFile>
+    <project.dbsteward.oldDefinitionFile>../example1/example1.xml</project.dbsteward.oldDefinitionFile>
     <project.dbsteward.newDefinitionFile>example2.xml</project.dbsteward.newDefinitionFile>
     <project.dbsteward.database.host>localhost</project.dbsteward.database.host>
     <project.dbsteward.database.port>5432</project.dbsteward.database.port>
     <project.dbsteward.database.name>someapp</project.dbsteward.database.name>
     <project.dbsteward.database.username>dbsteward_ci</project.dbsteward.database.username>
     <project.dbsteward.database.password>password1</project.dbsteward.database.password>
+    <project.dbsteward.database.bootstrap>postgres</project.dbsteward.database.bootstrap>
   </properties>
 
   <dependencies>
@@ -76,7 +77,7 @@
           <!-- Relative or absolute path to old (previous) database definition XML file -->
           <oldDefinitionFile>${project.dbsteward.oldDefinitionFile}</oldDefinitionFile>
           <!-- Relative or absolute path to new (current) database definition XML file -->
-          <newDefinitionFile>${project.dbsteward.NewDefinitionFile}</newDefinitionFile>
+          <newDefinitionFile>${project.dbsteward.newDefinitionFile}</newDefinitionFile>
           <!-- database connection information -->
           <dbHost>${project.dbsteward.database.host}</dbHost>
           <dbPort>${project.dbsteward.database.port}</dbPort>

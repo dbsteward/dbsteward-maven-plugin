@@ -54,7 +54,7 @@
           <col>3</col>
           <col>DEFAULT_USER</col>
           <col sql="true">NOW()</col>
-          <col>{1}</col>
+          <col>'{1}'</col>
         </row>
       </rows>
     </table>
