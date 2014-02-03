@@ -21,6 +21,10 @@ env:
     - TRAVIS_PGSQL8_DBNAME_MGMT=postgres
     - TRAVIS_PGSQL8_DBUSER_MGMT=postgres
     - TRAVIS_PGSQL8_DBPASS_MGMT=
+# use the pear package or tbe DBSteward branch specified
+    - TRAVIS_DBSTEWARD_USE_PEAR_PACKAGE=true
+    - TRAVIS_DBSTEWARD_BRANCH=master
+    - TRAVIS_DBSTEWARD_PEAR_VERSION=1.3.6
 
   # matrix env vars generate a new build config per set
   # we need to run the two test groups separately due to active_sql_format_autoloader
@@ -43,9 +47,17 @@ before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE ROLE someapp;"; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE ROLE someapp_readonly;"; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"; fi
-  - sudo pear channel-discover pear.dbsteward.org
-  - sudo pear install dbsteward/DBSteward
-  - which dbsteward
+# plugin release branches install the corresponding dbsteward pear package
+# dev topic / master branches check out dbsteward instead of using the pear package
+  - if [[ "$TRAVIS_DBSTEWARD_USE_PEAR_PACKAGE" == "true" ]]; then
+    sudo pear channel-discover pear.dbsteward.org
+    sudo pear install "dbsteward/DBSteward-$TRAVIS_DBSTEWARD_PEAR_VERSION"
+    which dbsteward
+  else 
+    sudo git clone --depth=50 --branch=$TRAVIS_DBSTEWARD_BRANCH git://github.com/nkiraly/DBSteward.git nkiraly/DBSteward
+    export TRAVIS_DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward
+  fi
+  
 
 # by default, travis runs "mvn test", but we want to make sure that after installing the plugin, the examples work
 script: ./script/ci/run_examples.sh
