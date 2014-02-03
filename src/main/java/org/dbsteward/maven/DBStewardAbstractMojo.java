@@ -62,7 +62,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    * git cloned it
    */
   @Parameter(defaultValue = "dbsteward", property = "dbstewardBinaryPath", required = true)
-  protected File dbstewardBinaryPath;
+  protected String dbstewardBinaryPath;
 
   protected DBExecutor dbExecutor;
 
@@ -140,7 +140,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    */
   protected void runDbsteward(String... args) throws MojoExecutionException {
     Commandline commandLine = new Commandline();
-    commandLine.setExecutable(dbstewardBinaryPath.getPath());
+    commandLine.setExecutable(dbstewardBinaryPath);
 
     Arg outputdir_arg = commandLine.createArg();
     outputdir_arg.setValue("--outputdir=" + outputDir);
