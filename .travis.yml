@@ -32,9 +32,10 @@ env:
     - DBSTEWARD_SQLFORMAT=pgsql8
 #    - DBSTEWARD_SQLFORMAT=mysql5
 
+before_install:
+  - sudo apt-get update
 
 install:
-  - sudo apt-get update
   - sudo apt-get install php5
   - sudo apt-get install php-pear
   - sudo apt-get install php5-pgsql
@@ -46,9 +47,11 @@ install:
   - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then sudo pear channel-discover pear.dbsteward.org ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then sudo pear install "dbsteward/DBSteward-$DBSTEWARD_PEAR_VERSION" ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then which dbsteward ; fi
+  - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then dbsteward ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then export TRAVIS_DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then find /home/travis/build/nkiraly/* ; fi
+  - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then ./home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
 
 
 before_script:
