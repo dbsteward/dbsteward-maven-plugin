@@ -89,7 +89,7 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
       Arg _arg = commandLine.createArg();
       _arg.setValue(arg);
     }
-    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(getLog());
+    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(getLog(), PluginLogLevel.LOG_LEVEL_INFO);
     StringStreamConsumer errorStream = new StringStreamConsumer();
 
     try {

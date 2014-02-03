@@ -28,40 +28,22 @@ package org.dbsteward.maven;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-import org.codehaus.plexus.util.cli.StreamConsumer;
-import org.apache.maven.plugin.logging.Log;
+
 
 /**
- * Maven Plugin Log StreamConsumer for system calls
+ * Maven Plugin Log StreamConsumer Log Level Constants for configuration
  *
  * @author nicholas.kiraly
  */
-public class PluginLogStreamConsumer implements StreamConsumer {
+public class PluginLogLevel {
 
-  private final Log log;
-  private final int level;
+  public static final int LOG_LEVEL_DEBUG = 10;
+  public static final int LOG_LEVEL_INFO = 8;
+  public static final int LOG_LEVEL_WARN = 6;
+  public static final int LOG_LEVEL_ERROR = 4;
 
-  PluginLogStreamConsumer(Log log, int level) {
-    this.log = log;
-    this.level = level;
-  }
-
-  public void consumeLine(String line) {
-    switch (this.level) {
-      case PluginLogLevel.LOG_LEVEL_ERROR:
-        this.log.error(line);
-        break;
-      case PluginLogLevel.LOG_LEVEL_WARN:
-        this.log.warn(line);
-        break;
-      case PluginLogLevel.LOG_LEVEL_INFO:
-        this.log.info(line);
-        break;
-      case PluginLogLevel.LOG_LEVEL_DEBUG:
-      default:
-        this.log.debug(line);
-        break;
-    }
+  private PluginLogLevel() {
+    // not to be instanced
   }
 
 }
