@@ -2,7 +2,7 @@ language: java
 
 jdk:
   - openjdk7
-  - oraclejdk7
+#  - oraclejdk7
 
 env:
   # global env vars are injected into the environment of all build configs
@@ -39,7 +39,6 @@ before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"; fi
   pear channel-discover pear.dbsteward.org
   pear install dbsteward/DBSteward
-  phpenv rehash
 
 # by default, travis runs "mvn test", but we want to make sure that after installing the plugin, the examples work
 script: ./script/ci/run_examples.sh
