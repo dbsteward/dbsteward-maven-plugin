@@ -29,7 +29,7 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -38,72 +38,61 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * Difference the specified DBSteward definition files, outputting the SQL
- * statements to upgrade old to new
+ * Difference and upgrade the specified database with the compiled SQL diff of
+ * the specifies DBSteward definition files.
+ *
+ * SQLDiffMojo (sql-diff goal) is a prerequisite to this running successfully
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "sql-diff", defaultPhase = LifecyclePhase.COMPILE)
-public class SQLDiffMojo extends DBStewardAbstractMojo {
+@Mojo(name = "db-upgrade", defaultPhase = LifecyclePhase.DEPLOY)
+public class DBUpgradeMojo extends DBStewardAbstractMojo {
 
   /**
    * Relative or absolute path to old (previous) database definition XML file
    */
-  @Parameter(property = "oldDefinitionFile", required = true)
+  @Parameter(defaultValue = "${project.dbsteward.oldDefinitionFile}", property = "oldDefinitionFile", required = true)
   protected File oldDefinitionFile;
 
   /**
    * Relative or absolute path to new (current) database definition XML file
    */
-  @Parameter(property = "newDefinitionFile", required = true)
+  @Parameter(defaultValue = "${project.dbsteward.newDefinitionFile}", property = "newDefinitionFile", required = true)
   protected File newDefinitionFile;
 
   /**
-   * Compile upgrade SQL files specified in plugin config
-   * 
+   * Upgrade the database specified in plugin config
+   *
    * @throws MojoExecutionException
    */
   @Override
   public void execute() throws MojoExecutionException {
-    // do common setup from DBStewardAbstractMojo
     super.execute();
 
-    getLog().info("Diffing DBSteward definitions");
-    getLog().info("  Old: " + oldDefinitionFile.getPath());
-    getLog().info("  New: " + newDefinitionFile.getPath());
-
-    String[] args = {
-      "--oldxml=" + oldDefinitionFile.getPath(),
-      "--newxml=" + newDefinitionFile.getPath()
-    };
-    runDbsteward(args);
-
-    // confirm output before returning
-    // calculate upgrade files path
-    String upgradeSqlFilePrefix = FileUtils.basename(newDefinitionFile.getPath(), "xml");
-    // kill trailing . left by basename
-    upgradeSqlFilePrefix = upgradeSqlFilePrefix.substring(0, upgradeSqlFilePrefix.length() - 1);
-    upgradeSqlFilePrefix = upgradeSqlFilePrefix + "_upgrade";
-
-    // look for files matching prefix in outputDir
-    List<File> upgradeSqlFiles = null;
-    try {
-      upgradeSqlFiles = FileUtils.getFiles(outputDir, upgradeSqlFilePrefix + "*.*", "");
-    } catch (IOException ioe) {
-      getLog().error("Exception while scanning for DBSteward upgrade output files: " + ioe.getMessage(), ioe);
+    // get upgrade file names  stored by SQLDiffMojo
+    String upgradeSqlFileNameCSL = proj.getProperties().getProperty("project.dbsteward.output.upgradeSqlFileNameCSL");
+    if (upgradeSqlFileNameCSL == null || upgradeSqlFileNameCSL.length() == 0) {
+      throw new MojoExecutionException("project.dbsteward.output.upgradeFileNameCSL is not set. Did you run sql-diff before this goal?");
+    }
+    String[] upgradeSqlFileNames = StringUtils.split(upgradeSqlFileNameCSL, ",");
+    List<File> upgradeSqlFiles = new ArrayList<File>();
+    // check that upgrade files named exist
+    for (String upgradeSqlFileName : upgradeSqlFileNames) {
+      File uf = new File(upgradeSqlFileName);
+      if (!uf.exists()) {
+        throw new MojoExecutionException("project.dbsteward.output.upgradeFileNameCSL item " + upgradeSqlFileName + "does not exist. Did you run sql-diff before this goal?");
+      }
+      upgradeSqlFiles.add(uf);
     }
 
-    if (upgradeSqlFiles.size() == 0) {
-      getLog().error("DBSteward outputDir " + outputDir + " not found to contain any upgrade files. Check DBSteward execution output.");
+    getLog().info("Upgrading database " + dbName + " on " + dbHost);
+    for (File upgradeSqlFile : upgradeSqlFiles) {
+      getLog().info("Executing upgrade script: " + upgradeSqlFile);
+      //@TODO sql executor call
     }
-
-    // store in upgradeSqlFileNameCSL for reference by build chain
-    String upgradeSqlFileNameCSL = StringUtils.join(upgradeSqlFiles.iterator(), ",");
-    proj.getProperties().setProperty("project.dbsteward.output.upgradeSqlFileNameCSL", upgradeSqlFileNameCSL);
   }
 
 }

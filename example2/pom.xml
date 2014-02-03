@@ -39,6 +39,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.dbsteward.path>dbsteward</project.dbsteward.path>
+    <project.dbsteward.sqlFormat>pgsql8</project.dbsteward.sqlFormat>
+    <project.dbsteward.oldDefinitionFile>example1.xml</project.dbsteward.oldDefinitionFile>
+    <project.dbsteward.newDefinitionFile>example2.xml</project.dbsteward.newDefinitionFile>
+    <project.dbsteward.database.host>localhost</project.dbsteward.database.host>
+    <project.dbsteward.database.port>5432</project.dbsteward.database.port>
+    <project.dbsteward.database.name>someapp</project.dbsteward.database.name>
+    <project.dbsteward.database.username>dbsteward_ci</project.dbsteward.database.username>
+    <project.dbsteward.database.password>password1</project.dbsteward.database.password>
   </properties>
 
   <dependencies>
@@ -55,22 +63,6 @@
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
         <version>1.3.7-SNAPSHOT</version>
-        <dependencies>
-          <!-- artifact that provides <configuration> property <driver> below -->
-          <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>8.4-702.jdbc4</version>
-          </dependency>
-          <!-- pg 9 groupId changed to org.postgresql -->
-          <!--
-          <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.2-1004-jdbc4</version>
-          </dependency>
-          -->
-        </dependencies>
         <configuration>
           <!--
             DBSteward relative or absolute binary - should be available on your path
@@ -79,37 +71,33 @@
             /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
-          <!-- BEGIN sql-diff goal properties -->
+          <!-- Target database sql format flavor -->
+          <sqlFormat>${project.dbsteward.sqlFormat}</sqlFormat>
           <!-- Relative or absolute path to old (previous) database definition XML file -->
-          <oldDefinitionFile>../example1/example1.xml</oldDefinitionFile>
+          <oldDefinitionFile>${project.dbsteward.oldDefinitionFile}</oldDefinitionFile>
           <!-- Relative or absolute path to new (current) database definition XML file -->
-          <newDefinitionFile>example2.xml</newDefinitionFile>
-          <!-- END sql-diff goal properties -->
-
-          <!-- BEGIN db-upgrade goal properties -->
-          <driver>org.postgresql.Driver</driver>
-          <url>jdbc:postgresql://localhost:5432/someapp_example</url>
-          <username>dbsteward_ci</username>
-          <password>password1</password>
-          <!--
-            You can comment out username/password configurations and
-            have maven to look them up in your settings.xml using ${settingsKey}
-            <settingsKey>dbstewardCI</settingsKey>
-          -->
-          <!-- END db-upgrade goal properties -->
+          <newDefinitionFile>${project.dbsteward.NewDefinitionFile}</newDefinitionFile>
+          <!-- database connection information -->
+          <dbHost>${project.dbsteward.database.host}</dbHost>
+          <dbPort>${project.dbsteward.database.port}</dbPort>
+          <dbName>${project.dbsteward.database.name}</dbName>
+          <dbUsername>${project.dbsteward.database.username}</dbUsername>
+          <dbPassword>${project.dbsteward.database.password}</dbPassword>
+          <dbBootstrap>${project.dbsteward.database.bootstrap}</dbBootstrap>
         </configuration>
-        <!--
-          Command Line Usage - dbsteward-maven-plugin specifies the plugin prefix dbsteward
-
-          Generate database upgrade SQL files
-          $ mvn dbsteward:sql-diff
-
-          Upgrade someapp_example db to example2.xml defintiion
-          $ mvn dbsteward:db-upgrade
-
-          Goals can be combined into one mvn command.
-        -->
       </plugin>
+      <!--
+        Goal Usage
+
+        Generate database upgrade SQL files by specifying sql-diff goal
+        $ mvn dbsteward-maven-plugin:sql-diff
+
+        Upgrade someapp db to example2.xml definition with by specifying db-upgrade goal
+        $ mvn dbsteward-maven-plugin:db-upgrade
+
+        These goals can be combined
+        $ mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade
+      -->
     </plugins>
   </build>
 

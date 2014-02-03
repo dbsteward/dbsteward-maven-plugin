@@ -39,12 +39,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.dbsteward.path>dbsteward</project.dbsteward.path>
-    <project.dbsteward.source.filename>example1.xml</project.dbsteward.source.filename>
-    <project.dbsteward.target.name>someapp</project.dbsteward.target.name>
-    <project.dbsteward.target.url>jdbc:postgresql://localhost:5432/someapp</project.dbsteward.target.url>
-    <project.dbsteward.target.username>dbsteward_ci</project.dbsteward.target.username>
-    <project.dbsteward.target.password>password1</project.dbsteward.target.password>
-    <project.dbsteward.target.bootstrapUrl>jdbc:postgresql://localhost:5432/postgres</project.dbsteward.target.bootstrapUrl>
+    <project.dbsteward.sqlFormat>pgsql8</project.dbsteward.sqlFormat>
+    <project.dbsteward.definitionFile>example1.xml</project.dbsteward.definitionFile>
+    <project.dbsteward.database.host>localhost</project.dbsteward.database.host>
+    <project.dbsteward.database.port>5432</project.dbsteward.database.port>
+    <project.dbsteward.database.name>someapp</project.dbsteward.database.name>
+    <project.dbsteward.database.username>dbsteward_ci</project.dbsteward.database.username>
+    <project.dbsteward.database.password>password1</project.dbsteward.database.password>
+    <project.dbsteward.database.bootstrap>postgres</project.dbsteward.database.bootstrap>
   </properties>
 
   <dependencies>
@@ -53,11 +55,6 @@
       <artifactId>dbsteward-maven-plugin</artifactId>
       <version>1.3.7-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>sql-maven-plugin</artifactId>
-      <version>1.5</version>
-     </dependency>
   </dependencies>
 
   <build>
@@ -66,7 +63,6 @@
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
         <version>1.3.7-SNAPSHOT</version>
-
         <configuration>
           <!--
             DBSteward relative or absolute binary - should be available on your path
@@ -75,104 +71,32 @@
             /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
+          <!-- Target database sql format flavor -->
+          <sqlFormat>${project.dbsteward.sqlFormat}</sqlFormat>
+          <!-- Relative or absolute path to DBSteward database definition XML file -->
+          <definitionFile>${project.dbsteward.definitionFile}</definitionFile>
+          <!-- database connection information -->
+          <dbHost>${project.dbsteward.database.host}</dbHost>
+          <dbPort>${project.dbsteward.database.port}</dbPort>
+          <dbName>${project.dbsteward.database.name}</dbName>
+          <dbUsername>${project.dbsteward.database.username}</dbUsername>
+          <dbPassword>${project.dbsteward.database.password}</dbPassword>
+          <dbBootstrap>${project.dbsteward.database.bootstrap}</dbBootstrap>
         </configuration>
-
-        <executions>
-          <execution>
-            <id>build-sql-file</id>
-            <!-- execution is in validate phase so that buildFilename property can be stored by plugin -->
-            <phase>compile</phase>
-            <goals>
-              <goal>sql-compile</goal>
-            </goals>
-            <configuration>
-              <!-- Relative or absolute path to DBSteward database definition XML file -->
-              <definitionFile>${project.dbsteward.source.filename}</definitionFile>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
+      <!--
+        Goal Usage
 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>sql-maven-plugin</artifactId>
-        <version>1.5</version>
+        Generate database creation SQL file by specifying sql-compile goal
+        $ mvn dbsteward-maven-plugin:sql-compile
 
-        <dependencies>
-          <!-- artifact that provides <configuration> property <driver> below -->
-          <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>8.4-702.jdbc4</version>
-          </dependency>
-          <!-- pg 9 groupId changed to org.postgresql -->
-          <!--
-          <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.2-1004-jdbc4</version>
-          </dependency>
-          -->
-        </dependencies>
+        Create the database and load the compiled SQL file with db-create
+        $ mvn dbsteward-maven-plugin:db-create
 
-        <!-- common configuration shared by all executions -->
-        <configuration>
-          <driver>org.postgresql.Driver</driver>
-          <url>${project.dbsteward.target.url}</url>
-          <username>${project.dbsteward.target.username}</username>
-          <password>${project.dbsteward.target.password}</password>
-          <!--
-            You can comment out username/password configurations and
-            have maven to look them up in your settings.xml using ${settingsKey}
-            <settingsKey>dbstewardCI</settingsKey>
-          -->
-          <!-- all executions are ignored if -Dmaven.test.skip=true -->
-          <skip>${maven.test.skip}</skip>
-        </configuration>
-
-        <executions>
-          <execution>
-            <id>create-db</id>
-            <phase>package</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <url>${project.dbsteward.target.bootstrapUrl}</url>
-              <!-- no transaction -->
-              <autocommit>true</autocommit>
-              <sqlCommand>CREATE DATABASE ${project.dbsteward.target.name}</sqlCommand>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>load-db</id>
-            <phase>package</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <autocommit>true</autocommit>
-              <srcFiles>
-                <srcFile>${project.dbsteward.output.buildFileName}</srcFile>
-              </srcFiles>
-              <url>${project.dbsteward.target.url}</url>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+        These goals can be combined
+        $ mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
+      -->
     </plugins>
-    <!--
-      Usage
-
-      With the executions as defined,
-
-      Generate database create SQL file by specifying the compile goal
-      $ mvn compile
-
-      Generate and Create the database with the package goal which will run compile as a previous lifecycle step
-      $ mvn package
-    -->
   </build>
 
 </project>

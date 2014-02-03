@@ -35,6 +35,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.cli.Arg;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
@@ -50,6 +51,11 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 public abstract class DBStewardAbstractMojo extends AbstractMojo {
 
   /**
+   * Project context for passing property values in and out
+   */
+  protected MavenProject proj;
+
+  /**
    * DBSteward relative or absolute binary - should be available on your path
    * example values: dbsteward if you installed DBSteward via PEAR
    * /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you
@@ -57,6 +63,16 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
    */
   @Parameter(defaultValue = "dbsteward", property = "dbstewardBinaryPath", required = true)
   protected File dbstewardBinaryPath;
+
+  protected DBExecutor dbExecutor;
+
+  /**
+   * Target database sql format flavor
+   *
+   * pgsql8, mysql5, etc
+   */
+  @Parameter(defaultValue = "${project.dbsteward.sqlFormat}", property = "sqlFormat", required = true)
+  protected String sqlFormat;
 
   /**
    * DBSteward --outputdir value specification. You generally want to leave this
@@ -67,10 +83,59 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
   protected File outputDir;
 
   /**
-   * Run DBSteward binary with the specified parameters
+   * Target database server host name
+   */
+  @Parameter(defaultValue = "${project.dbsteward.database.host}", property = "dbHost", required = true)
+  protected String dbHost;
+
+  /**
+   * Target database server port address
+   */
+  @Parameter(defaultValue = "${project.dbsteward.database.port}", property = "dbPort", required = true)
+  protected String dbPort;
+
+  /**
+   * Target database Name
+   */
+  @Parameter(defaultValue = "${project.dbsteward.database.name}", property = "dbName", required = true)
+  protected String dbName;
+
+  /**
+   * Target database username
+   */
+  @Parameter(defaultValue = "${project.dbsteward.database.username}", property = "dbUsername", required = true)
+  protected String dbUsername;
+
+  /**
+   * Target database password
+   */
+  @Parameter(defaultValue = "${project.dbsteward.database.password}", property = "dbPassword", required = true)
+  protected String dbPassword;
+
+  /**
+   * Target database bootstrapper database name
+   */
+  @Parameter(defaultValue = "${project.dbsteward.database.bootstrap}", property = "dbBootstrap", required = true)
+  protected String dbBootstrap;
+
+  /**
+   * Common plugin setup stuff to be extended by goal implementations
+   *
+   * @throws MojoExecutionException
+   */
+  @Override
+  public void execute() throws MojoExecutionException {
+    proj = (MavenProject) getPluginContext().get("project");
+
+    dbExecutor = DBExecutorResolver.resolveExecutorBySqlFormat(sqlFormat);
+    dbExecutor.setPluginLog(getLog());
+    dbExecutor.setConnectionInfo(dbHost, dbPort, dbName, dbUsername, dbPassword, dbBootstrap);
+  }
+
+  /**
+   * Run DBSteward binary with the plugin configuration settings specified
    *
    * @param args
-   * @throws org.codehaus.plexus.util.cli.CommandLineException
    * @throws org.apache.maven.plugin.MojoExecutionException
    */
   protected void runDbsteward(String... args) throws MojoExecutionException {
@@ -79,6 +144,9 @@ public abstract class DBStewardAbstractMojo extends AbstractMojo {
 
     Arg outputdir_arg = commandLine.createArg();
     outputdir_arg.setValue("--outputdir=" + outputDir);
+
+    Arg sqlformat_arg = commandLine.createArg();
+    sqlformat_arg.setValue("--sqlformat=" + sqlFormat);
 
     if (!outputDir.exists()) {
       getLog().warn("outputdir " + outputDir + " does not exist, creating");

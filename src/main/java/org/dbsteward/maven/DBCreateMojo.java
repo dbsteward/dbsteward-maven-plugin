@@ -29,7 +29,6 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -40,52 +39,63 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 
 /**
- * Compile the specified DBSteward definition files to SQL statements
+ * Create the specified database and load it with the compiled SQL of the
+ * specified definition files.
+ *
+ * SQLCompileMojo (sql-compile goal) is a prerequisite to this running
+ * successfully.
  *
  * @author nicholas.kiraly
  */
-@Mojo(name = "sql-compile", defaultPhase = LifecyclePhase.COMPILE)
-public class SQLCompileMojo extends DBStewardAbstractMojo {
+@Mojo(name = "db-create", defaultPhase = LifecyclePhase.DEPLOY)
+public class DBCreateMojo extends DBStewardAbstractMojo {
 
   /**
    * Relative or absolute path to DBSteward database definition XML file
    */
   @Parameter(defaultValue = "${project.dbsteward.definitionFile}", property = "definitionFile", required = true)
-  protected File definitionFile;
+  private File definitionFile;
 
   /**
-   * Compile creation sql specified in plugin config
-   * 
+   * Database name to create. If omitted, CREATE DATABASE will not be issued.
+   */
+  @Parameter(property = "createDBName")
+  private String createDBName;
+
+  /**
+   * Database connection to use to create the database
+   */
+  @Parameter(property = "createDBUrl")
+  private String createDBUrl;
+
+  /**
+   * Create the database specified in plugin config
+   *
    * @throws MojoExecutionException
    */
   @Override
   public void execute() throws MojoExecutionException {
-    // do common setup from DBStewardAbstractMojo
     super.execute();
 
-    getLog().info("Compiling DBSteward definition");
-    getLog().info(" Path:" + definitionFile.getPath());
-
-    String[] args = {
-      "--xml=" + definitionFile.getPath()
-    };
-    runDbsteward(args);
-
-    // confirm output before returning
-    // calculate build file path
-    String buildSqlFileName = FileUtils.basename(definitionFile.getPath(), "xml");
-    buildSqlFileName = outputDir + File.separator + buildSqlFileName;
-    // kill trailing . left by basename
-    buildSqlFileName = buildSqlFileName.substring(0, buildSqlFileName.length() - 1);
-    buildSqlFileName = buildSqlFileName + "_build.sql";
-
-    // confirm definitionFile's output file in the output dir
+    // get buildSqlFileName stored by SQLCompileMojo
+    String buildSqlFileName = proj.getProperties().getProperty("project.dbsteward.output.buildSqlFileName");
+    if (buildSqlFileName == null || buildSqlFileName.length() == 0) {
+      throw new MojoExecutionException("project.dbsteward.output.buildSqlFileName is not set. Did you run sql-compile before this goal?");
+    }
+    // check file exists
     File buildSqlFile = new File(buildSqlFileName);
     if (!buildSqlFile.exists()) {
-      throw new MojoExecutionException("DBSteward output build file " + buildSqlFileName + "does not exist. Check DBSteward execution output.");
+      throw new MojoExecutionException("project.dbsteward.output.buildSqlFileName " + buildSqlFileName + "does not exist. Did you run sql-compile before this goal?");
     }
-    // store in buildSqlFileName for reference by build chain
-    proj.getProperties().setProperty("project.dbsteward.output.buildSqlFileName", buildSqlFileName);
+
+    if (createDBName != null && createDBName.length() > 0) {
+      getLog().info("Creating database: " + dbName + " on " + dbHost);
+      dbExecutor.createDatabase(dbName);
+    }
+
+    getLog().info("Loading database " + dbName + " on " + dbHost);
+    getLog().info("Executing script: " + buildSqlFile);
+    dbExecutor.executeFile(buildSqlFile);
   }
 
 }
