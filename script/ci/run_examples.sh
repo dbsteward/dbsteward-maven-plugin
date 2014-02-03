@@ -14,4 +14,4 @@ mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
 cd ${basedir}
 cd example2
 mvn clean
-mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
+mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade
