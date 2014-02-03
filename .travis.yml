@@ -31,6 +31,7 @@ env:
 install:
   - sudo apt-get update
   - sudo apt-get install php5
+  - sudo apt-get install php-pear
 
 before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE USER dbsteward_ci WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password1';"; fi
