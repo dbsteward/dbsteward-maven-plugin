@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash -e
 #
 # run the plugin examples to ensure plugin works as exemplified
 # https://github.com/nkiraly
