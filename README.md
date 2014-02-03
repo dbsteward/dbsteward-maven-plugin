@@ -2,6 +2,7 @@ dbsteward-maven-plugin
 ======================
 DBSteward maven plugin for deploying and upgrading your DBSteward-defined database
 
+nkiraly/dbsteward-maven-plugin/master Build Status: [![nkiraly/dbsteward-maven-plugin/master Build Status](https://travis-ci.org/nkiraly/dbsteward-maven-plugin.png?branch=master)](https://travis-ci.org/nkiraly/dbsteward-maven-plugin)
 
 
 Usage Guide
