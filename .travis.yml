@@ -57,11 +57,12 @@ install:
 before_script:
   - mvn clean
   - mvn install
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE USER dbsteward_ci WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password1';"; fi
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE DATABASE someapp;"; fi
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE ROLE someapp;"; fi
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE ROLE someapp_readonly;"; fi
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE USER dbsteward_ci WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password1';" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE DATABASE someapp;" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -l ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE ROLE someapp;" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE ROLE someapp_readonly;" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;" ; fi
 
 
 # by default, travis runs "mvn test", but we want to make sure that after installing the plugin, the examples work
