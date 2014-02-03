@@ -8,8 +8,10 @@ basedir=`pwd`
 
 cd ${basedir}
 cd example1
+mvn clean
 mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
 
 cd ${basedir}
 cd example2
+mvn clean
 mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
