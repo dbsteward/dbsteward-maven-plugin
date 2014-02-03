@@ -48,6 +48,7 @@ install:
   - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then which dbsteward ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_BRANCH git://github.com/nkiraly/DBSteward.git nkiraly/DBSteward ; fi
   - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then export TRAVIS_DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
+  - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then find /home/travis/build/nkiraly/* ; fi
 
 
 before_script:
