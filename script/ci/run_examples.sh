@@ -18,9 +18,6 @@ else
 fi
 
 
-dropdb -U dbsteward_ci someapp
-
-
 cd ${basedir}
 cd example1
 #mvn clean
