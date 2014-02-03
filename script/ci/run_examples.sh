@@ -10,11 +10,18 @@ mvn_props=""
 
 # if travis specified the binary location via environment variable
 # then us it when calling the maven plugin
-if [ -z "${TRAVIS_DBSTEWARD_BINARY_LOCATION}" ]; then
+if [ -z "${DBSTEWARD_BINARY_LOCATION}" ]; then
   mvn_props="" ;
 else
-  echo "Using environment variable TRAVIS_DBSTEWARD_BINARY_LOCATION ${TRAVIS_DBSTEWARD_BINARY_LOCATION} for project.dbsteward.path"
-  mvn_props="-D project.dbsteward.path=${TRAVIS_DBSTEWARD_BINARY_LOCATION}" ;
+  echo "Using environment variable DBSTEWARD_BINARY_LOCATION ${DBSTEWARD_BINARY_LOCATION} for project.dbsteward.path"
+  mvn_props="-D project.dbsteward.path=${DBSTEWARD_BINARY_LOCATION}" ;
+fi
+
+if [ -z "${DBSTEWARD_SQLFORMAT}" ]; then
+  mvn_props="" ;
+else
+  echo "Using environment variable DBSTEWARD_SQLFORMAT ${DBSTEWARD_SQLFORMAT} for project.dbsteward.sqlFormat"
+  mvn_props="-D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT}" ;
 fi
 
 
