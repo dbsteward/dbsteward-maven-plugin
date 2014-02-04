@@ -14,14 +14,14 @@ if [ -z "${DBSTEWARD_BINARY_LOCATION}" ]; then
   mvn_props="" ;
 else
   echo "Using environment variable DBSTEWARD_BINARY_LOCATION ${DBSTEWARD_BINARY_LOCATION} for project.dbsteward.path"
-  mvn_props="-D project.dbsteward.path=${DBSTEWARD_BINARY_LOCATION}" ;
+  mvn_props=" -D project.dbsteward.path=${DBSTEWARD_BINARY_LOCATION} " ;
 fi
 
 if [ -z "${DBSTEWARD_SQLFORMAT}" ]; then
-  mvn_props="" ;
+  mvn_props+="" ;
 else
   echo "Using environment variable DBSTEWARD_SQLFORMAT ${DBSTEWARD_SQLFORMAT} for project.dbsteward.sqlFormat"
-  mvn_props="-D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT}" ;
+  mvn_props+=" -D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT} " ;
 fi
 
 
