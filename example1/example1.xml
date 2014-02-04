@@ -25,7 +25,9 @@
       </slonyReplicaSet>
     </slony>
   </database>
+  <!-- In PostgreSQL 9.0 and newer, PL/pgSQL is installed by default
   <language name="plpgsql" procedural="true" owner="ROLE_OWNER"/>
+  -->
   <schema name="someapp_users" owner="ROLE_OWNER">
     <table name="user" owner="ROLE_OWNER" primaryKey="user_id" slonySetId="500" slonyId="101" description="user table comment">
       <tablePartition type="MODULO">
