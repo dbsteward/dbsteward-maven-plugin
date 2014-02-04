@@ -61,8 +61,9 @@ before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE DATABASE someapp TEMPLATE template0 ENCODING 'UTF8';" ; fi
   #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -l ; fi
   #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "SELECT * FROM pg_language;" ; fi
-  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp;" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp WITH LOGIN;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_readonly;" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_dba;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;" ; fi
 
 

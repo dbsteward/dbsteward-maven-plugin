@@ -7,7 +7,7 @@
   <database>
     <role>
       <application>someapp</application>
-      <owner>pgsql</owner>
+      <owner>someapp_dba</owner>
       <replication>someapp_slony</replication>
       <readonly>someapp_readonly</readonly>
     </role>
