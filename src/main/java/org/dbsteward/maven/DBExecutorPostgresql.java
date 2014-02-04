@@ -69,6 +69,9 @@ public class DBExecutorPostgresql implements DBExecutor {
   protected String password;
   protected String bootstrap;
 
+  protected String dbEncoding = "UTF8";
+  protected String dbTemplate = "template0";
+
   public void setPluginLog(Log log) {
     this.log = log;
   }
@@ -89,8 +92,8 @@ public class DBExecutorPostgresql implements DBExecutor {
       "--port=" + this.port,
       "--username=" + this.username,
       name,
-      "--encoding=UTF8",
-      "--template=template0"
+      "--encoding=" + this.dbEncoding,
+      "--template=" + this.dbTemplate
     };
     executeTool(createdb, args);
   }
