@@ -24,14 +24,16 @@ else
   mvn_props+=" -D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT} " ;
 fi
 
-
-cd ${basedir}
-cd example1
-#mvn clean
-mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create ${mvn_props}
+psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
 
 
-cd ${basedir}
-cd example2
-#mvn clean
-mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade ${mvn_props}
+cd ${basedir}  || exit 100
+cd example1  || exit 101
+#mvn clean  || exit 102
+mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create ${mvn_props}  || exit 110
+
+
+cd ${basedir}  || exit 150
+cd example2  || exit 151
+#mvn clean  || exit 152
+mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade ${mvn_props}  || exit 160
