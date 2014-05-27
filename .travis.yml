@@ -22,7 +22,7 @@ env:
     - TRAVIS_PGSQL8_DBUSER_MGMT=postgres
     - TRAVIS_PGSQL8_DBPASS_MGMT=
 # use the pear package or tbe DBSteward branch specified
-    - USE_PEAR_PACKAGE=false
+    - USE_PEAR_PACKAGE=true
     - DBSTEWARD_BRANCH=master
     - DBSTEWARD_PEAR_VERSION=1.3.9
 
