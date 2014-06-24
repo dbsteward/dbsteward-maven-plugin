@@ -22,7 +22,7 @@ env:
     - TRAVIS_PGSQL8_DBUSER_MGMT=postgres
     - TRAVIS_PGSQL8_DBPASS_MGMT=
 # use the pear package or tbe DBSteward branch specified
-    - USE_PEAR_PACKAGE=false
+    - DBSTEWARD_PACKAGING=git
     - DBSTEWARD_BRANCH=master
     - DBSTEWARD_PEAR_VERSION=1.3.10
 
@@ -44,14 +44,14 @@ install:
   - pear version
 # plugin release branches install the corresponding dbsteward pear package
 # dev topic / master branches check out dbsteward instead of using the pear package
-  - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then sudo pear channel-discover pear.dbsteward.org ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then sudo pear install "dbsteward/DBSteward-$DBSTEWARD_PEAR_VERSION" ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then which dbsteward ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "true" ]]; then dbsteward ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then export DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then find /home/travis/build/nkiraly/* ; fi
-  - if [[ "$USE_PEAR_PACKAGE" == "false" ]]; then /home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then sudo pear channel-discover pear.dbsteward.org ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then sudo pear install "dbsteward/DBSteward-$DBSTEWARD_PEAR_VERSION" ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then which dbsteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then dbsteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then export DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then find /home/travis/build/nkiraly/* ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then /home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
 
 
 before_script:
