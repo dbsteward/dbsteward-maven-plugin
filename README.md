@@ -59,21 +59,21 @@ For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugi
 4) Run the plugin sql-compile goal to build your database creation SQL file:
 ```bash
 [ nkiraly@bludgeon ~/that-project-tho ]
-$ mvn dbsteward-maven-plugin:sql-compile
+$ mvn dbsteward:sql-compile
 ```
 
 
 5) Run the plugin db-create goal to build your database on the specified server:
 ```bash
 [ nkiraly@bludgeon ~/that-project-tho ]
-$ mvn dbsteward-maven-plugin:db-create
+$ mvn dbsteward:db-create
 ```
 
 
 Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
 ```bash
 [ nkiraly@bludgeon ~/that-project-tho ]
-$ mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
+$ mvn dbsteward:sql-compile dbsteward:db-create
 ```
 
 
@@ -110,20 +110,20 @@ For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugi
 4) Run the plugin sql-diff goal to build your database upgrade SQL files:
 ```bash
 [ nkiraly@bludgeon ~/that-project-tho ]
-$ mvn dbsteward-maven-plugin:sql-diff
+$ mvn dbsteward:sql-diff
 ```
 
 
 5) Run the plugin db-upgrade goal to upgrade your database on the specified server:
 ```bash
 [ nkiraly@bludgeon ~/that-project-tho ]
-$ mvn dbsteward-maven-plugin:db-upgrade
+$ mvn dbsteward:db-upgrade
 ```
 
 
 Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
 ```bash
 [ nkiraly@bludgeon ~/that-project-tho ]
-$ mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade
+$ mvn dbsteward:sql-diff dbsteward:db-upgrade
 ```
 
