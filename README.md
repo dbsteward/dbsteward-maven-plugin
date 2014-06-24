@@ -14,7 +14,7 @@ Here is a crash course for getting up and running building databases from DBStew
 ## Building a Database
 1) Check out the plugin code and mvn install the artifact to your m2 repo
 ```bash
-[ nkiraly@generati ~/dbsteward-maven-plugin ]
+[ nkiraly@bludgeon ~/dbsteward-maven-plugin ]
 $ mvn install
 ```
 
@@ -25,7 +25,7 @@ $ mvn install
     <dependency>
       <groupId>org.dbsteward.maven</groupId>
       <artifactId>dbsteward-maven-plugin</artifactId>
-      <version>1.3.7-SNAPSHOT</version>
+      <version>1.3.11-SNAPSHOT</version>
     </dependency>
   </dependencies>
 ```
@@ -38,7 +38,7 @@ $ mvn install
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
-        <version>1.3.7-SNAPSHOT</version>
+        <version>1.3.11-SNAPSHOT</version>
         <configuration>
           <sqlFormat>pgsql8</sqlFormat>
           <definitionFile>example.xml</definitionFile>
@@ -58,21 +58,21 @@ For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugi
 
 4) Run the plugin sql-compile goal to build your database creation SQL file:
 ```bash
-[ nkiraly@generati ~/that-project-tho ]
+[ nkiraly@bludgeon ~/that-project-tho ]
 $ mvn dbsteward-maven-plugin:sql-compile
 ```
 
 
 5) Run the plugin db-create goal to build your database on the specified server:
 ```bash
-[ nkiraly@generati ~/that-project-tho ]
+[ nkiraly@bludgeon ~/that-project-tho ]
 $ mvn dbsteward-maven-plugin:db-create
 ```
 
 
 Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
 ```bash
-[ nkiraly@generati ~/that-project-tho ]
+[ nkiraly@bludgeon ~/that-project-tho ]
 $ mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
 ```
 
@@ -89,7 +89,7 @@ Follow Steps 1 and 2 from Building a Database
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
-        <version>1.3.7-SNAPSHOT</version>
+        <version>1.3.11-SNAPSHOT</version>
         <configuration>
           <sqlFormat>pgsql8</sqlFormat>
           <oldDefinitionFile>example1.xml</oldDefinitionFile>
@@ -109,21 +109,21 @@ For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugi
 
 4) Run the plugin sql-diff goal to build your database upgrade SQL files:
 ```bash
-[ nkiraly@generati ~/that-project-tho ]
+[ nkiraly@bludgeon ~/that-project-tho ]
 $ mvn dbsteward-maven-plugin:sql-diff
 ```
 
 
 5) Run the plugin db-upgrade goal to upgrade your database on the specified server:
 ```bash
-[ nkiraly@generati ~/that-project-tho ]
+[ nkiraly@bludgeon ~/that-project-tho ]
 $ mvn dbsteward-maven-plugin:db-upgrade
 ```
 
 
 Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh:
 ```bash
-[ nkiraly@generati ~/that-project-tho ]
+[ nkiraly@bludgeon ~/that-project-tho ]
 $ mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade
 ```
 

@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.dbsteward.maven.it</groupId>
-  <artifactId>simple-it</artifactId>
-  <version>1.3.7-SNAPSHOT</version>
+  <artifactId>compile-it</artifactId>
+  <version>bludgeon</version>
 
   <description>A basic IT verifying the compile mojo works.</description>
 
