@@ -23,7 +23,7 @@ env:
     - TRAVIS_PGSQL8_DBPASS_MGMT=
 # use the pear package or tbe DBSteward branch specified
     - DBSTEWARD_PACKAGING=git
-    - DBSTEWARD_BRANCH=master
+    - DBSTEWARD_BRANCH=1.3.10
     - DBSTEWARD_PEAR_VERSION=1.3.10
 
   # matrix env vars generate a new build config per set
