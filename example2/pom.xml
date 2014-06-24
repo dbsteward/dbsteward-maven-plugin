@@ -83,13 +83,13 @@
         Goal Usage
 
         Generate database upgrade SQL files by specifying sql-diff goal
-        $ mvn dbsteward-maven-plugin:sql-diff
+        $ mvn dbsteward:sql-diff
 
         Upgrade someapp db to example2.xml definition with by specifying db-upgrade goal
-        $ mvn dbsteward-maven-plugin:db-upgrade
+        $ mvn dbsteward:db-upgrade
 
         These goals can be combined
-        $ mvn dbsteward-maven-plugin:sql-diff dbsteward-maven-plugin:db-upgrade
+        $ mvn dbsteward:sql-diff dbsteward:db-upgrade
       -->
     </plugins>
   </build>

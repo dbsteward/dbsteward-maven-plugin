@@ -83,13 +83,13 @@
         Goal Usage
 
         Generate database creation SQL file by specifying sql-compile goal
-        $ mvn dbsteward-maven-plugin:sql-compile
+        $ mvn dbsteward:sql-compile
 
         Create the database and load the compiled SQL file with db-create
-        $ mvn dbsteward-maven-plugin:db-create
+        $ mvn dbsteward:db-create
 
         These goals can be combined
-        $ mvn dbsteward-maven-plugin:sql-compile dbsteward-maven-plugin:db-create
+        $ mvn dbsteward:sql-compile dbsteward:db-create
       -->
     </plugins>
   </build>
