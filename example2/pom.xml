@@ -58,10 +58,10 @@
         <version>1.3.11-SNAPSHOT</version>
         <configuration>
           <!--
-            DBSteward relative or absolute binary - should be available on your path
+            DBSteward relative or absolute binary, available on your path
             example values:
-            dbsteward if you installed DBSteward via PEAR
-            /home/dev/DBSteward/bin/dbsteward your DBSteward working copy bin, if you git cloned it
+            dbsteward                           if you installed DBSteward via Composer
+            /home/dev/DBSteward/bin/dbsteward   your git working copy
           -->
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
           <!-- Target database sql format flavor -->
@@ -85,10 +85,7 @@
         Generate database upgrade SQL files by specifying sql-diff goal
         $ mvn dbsteward:sql-diff
 
-        Upgrade someapp db to example2.xml definition with by specifying db-upgrade goal
-        $ mvn dbsteward:db-upgrade
-
-        These goals can be combined
+        Combine that with db-upgrade to upgrade an instance of the database
         $ mvn dbsteward:sql-diff dbsteward:db-upgrade
       -->
     </plugins>
