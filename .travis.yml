@@ -41,7 +41,7 @@ install:
   - sudo apt-get install php5-pgsql
   - sudo apt-get install php5-mysql
   - php --version
-  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/home/travis/build
+  - curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
   # plugin release branches install the corresponding dbsteward composer package
   # dev topic / master branches check out dbsteward git repo directly
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer -version ; fi
