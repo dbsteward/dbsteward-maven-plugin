@@ -29,8 +29,12 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -38,8 +42,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Difference the specified DBSteward definition files, outputting the SQL
@@ -84,21 +86,14 @@ public class SQLDiffMojo extends DBStewardAbstractMojo {
 
     // confirm output before returning
     // calculate upgrade files path
-    String upgradeSqlFilePrefix = FileUtils.basename(newDefinitionFile.getPath(), "xml");
-    // kill trailing . left by basename
-    upgradeSqlFilePrefix = upgradeSqlFilePrefix.substring(0, upgradeSqlFilePrefix.length() - 1);
+    String upgradeSqlFilePrefix = FilenameUtils.getBaseName(newDefinitionFile.getPath());
     upgradeSqlFilePrefix = upgradeSqlFilePrefix + "_upgrade";
 
     // look for files matching prefix in outputDir
-    List<File> upgradeSqlFiles = null;
-    try {
-      upgradeSqlFiles = FileUtils.getFiles(outputDir, upgradeSqlFilePrefix + "*.*", "");
-    } catch (IOException ioe) {
-      getLog().error("Exception while scanning for DBSteward upgrade output files: " + ioe.getMessage(), ioe);
-      throw new MojoExecutionException("Exception while scanning for DBSteward upgrade output files: " + ioe.getMessage());
-    }
+    IOFileFilter fileFilter = new WildcardFileFilter(upgradeSqlFilePrefix + "*.*");
+    Collection<File> upgradeSqlFiles = FileUtils.listFiles(outputDir.getAbsoluteFile(), fileFilter, null);
 
-    if (upgradeSqlFiles.size() == 0) {
+    if (upgradeSqlFiles.isEmpty()) {
       throw new MojoExecutionException("DBSteward outputDir " + outputDir + " not found to contain any upgrade files. Check DBSteward execution output.");
     }
 

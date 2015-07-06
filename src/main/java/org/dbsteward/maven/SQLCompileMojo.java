@@ -29,6 +29,7 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -37,7 +38,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.FileUtils;
 
 /**
  * Compile the specified DBSteward definition files to SQL statements
@@ -73,11 +73,8 @@ public class SQLCompileMojo extends DBStewardAbstractMojo {
 
     // confirm output before returning
     // calculate build file path
-    String buildSqlFileName = FileUtils.basename(definitionFile.getPath(), "xml");
-    buildSqlFileName = outputDir + File.separator + buildSqlFileName;
-    // kill trailing . left by basename
-    buildSqlFileName = buildSqlFileName.substring(0, buildSqlFileName.length() - 1);
-    buildSqlFileName = buildSqlFileName + "_build.sql";
+    String buildSqlFileName = FilenameUtils.getBaseName(definitionFile.getPath());
+    buildSqlFileName = outputDir + File.separator + buildSqlFileName + "_build.sql";
 
     // confirm definitionFile's output file in the output dir
     File buildSqlFile = new File(buildSqlFileName);
