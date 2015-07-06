@@ -55,8 +55,7 @@ install:
 
 
 before_script:
-  - mvn clean
-  - mvn install
+  - mvn clean install
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE USER dbsteward_ci WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password1';" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE DATABASE someapp TEMPLATE template0 ENCODING 'UTF8';" ; fi
   #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -l ; fi
