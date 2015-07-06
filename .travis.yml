@@ -48,10 +48,12 @@ install:
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer global require nkiraly/dbsteward:$DBSTEWARD_COMPOSER_VERSION ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then which dbsteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then dbsteward ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_GIT_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then git clone --depth=50 --branch=$DBSTEWARD_GIT_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then cd /home/travis/build/nkiraly/DBSteward && composer install --dev --no-interaction ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then export DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then find /home/travis/build/nkiraly/* ; fi
+  #- if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then find /home/travis/build/nkiraly/* ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then /home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
+  - cd /home/travis/build
 
 
 before_script:
