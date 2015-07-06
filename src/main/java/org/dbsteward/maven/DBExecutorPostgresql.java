@@ -29,12 +29,16 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.cli.Arg;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.cli.CommandLineUtils.StringStreamConsumer;
 import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.cli.StreamConsumer;
 
 /**
  * Postgresql Database Executor Definition
@@ -85,6 +89,41 @@ public class DBExecutorPostgresql implements DBExecutor {
     this.bootstrap = boostrap;
   }
 
+  protected void executeTool(File tool, String... args) throws MojoExecutionException {
+    Commandline commandLine = new Commandline();
+    commandLine.setExecutable(tool.getPath());
+
+    for (String arg : args) {
+      Arg _arg = commandLine.createArg();
+      _arg.setValue(arg);
+    }
+
+    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(this.log, PluginLogLevel.LOG_LEVEL_INFO);
+    StringStreamConsumer errorStream = new StringStreamConsumer();
+
+    try {
+      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+      if (returnCode != 0) {
+        throw new MojoExecutionException("Unexpected Tool Return Code " + returnCode + " - Error Buffer = " + errorStream.getOutput());
+      }
+    } catch (CommandLineException cle) {
+      this.log.error("Tool Execution Exception: " + cle.getMessage(), cle);
+      throw new MojoExecutionException("Tool Execution Exception: " + cle.getMessage());
+    }
+  }
+
+  protected int executeToolWithConsumers(File tool, StreamConsumer infoStreamConsumer, StreamConsumer errorStreamConsumer, String... args) throws MojoExecutionException, CommandLineException {
+    Commandline commandLine = new Commandline();
+    commandLine.setExecutable(tool.getPath());
+
+    for (String arg : args) {
+      Arg _arg = commandLine.createArg();
+      _arg.setValue(arg);
+    }
+
+    return CommandLineUtils.executeCommandLine(commandLine, infoStreamConsumer, errorStreamConsumer, 10);
+  }
+
   public void createDatabase(String name) throws MojoExecutionException {
     File createdb = new File("createdb");
     String[] args = {
@@ -98,38 +137,93 @@ public class DBExecutorPostgresql implements DBExecutor {
     executeTool(createdb, args);
   }
 
-  public void executeFile(File f) throws MojoExecutionException {
+  public void executeFile(String name, File f) throws MojoExecutionException {
     File psql = new File("psql");
     String[] args = {
       "--variable=ON_ERROR_STOP=1",
       "--host=" + this.host,
       "--port=" + this.port,
       "--username=" + this.username,
-      "--dbname=" + this.name,
+      "--dbname=" + name,
       "--file=" + f
     };
     executeTool(psql, args);
   }
 
-  protected void executeTool(File tool, String... args) throws MojoExecutionException {
-    Commandline commandLine = new Commandline();
-    commandLine.setExecutable(tool.getPath());
+  @Override
+  public List<String> listDatabases() throws MojoExecutionException {
+    File psql = new File("psql");
+    String[] args = {
+      "--host=" + this.host,
+      "--port=" + this.port,
+      "--username=" + this.username,
+      "--dbname=" + this.bootstrap,
+      "--list"
+    };
 
-    for (String arg : args) {
-      Arg _arg = commandLine.createArg();
-      _arg.setValue(arg);
-    }
-    PluginLogStreamConsumer pluginInfoStream = new PluginLogStreamConsumer(this.log, PluginLogLevel.LOG_LEVEL_INFO);
-    CommandLineUtils.StringStreamConsumer errorStream = new CommandLineUtils.StringStreamConsumer();
-
+    StringStreamConsumer infoStreamConsumer = new StringStreamConsumer();
+    StringStreamConsumer errorStreamConsumer = new StringStreamConsumer();
     try {
-      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+      int returnCode = this.executeToolWithConsumers(psql, infoStreamConsumer, errorStreamConsumer, args);
       if (returnCode != 0) {
-        throw new MojoExecutionException("Unexpected Tool Return Code " + returnCode + " - Error Buffer = " + errorStream.getOutput());
+        throw new MojoExecutionException("Unexpected Tool Return Code " + returnCode + " - Error Buffer = " + errorStreamConsumer.getOutput());
       }
     } catch (CommandLineException cle) {
       this.log.error("Tool Execution Exception: " + cle.getMessage(), cle);
       throw new MojoExecutionException("Tool Execution Exception: " + cle.getMessage());
     }
+
+    List<String> list = new ArrayList<>();
+    /*
+     List of databases
+     Name           |    Owner     | Encoding | Collate | Ctype | Access privileges
+     -------------------------+--------------+----------+---------+-------+-------------------
+     dbsteward_phpunit       | deployment   | UTF8     | C       | C     |
+     postgres                | pgsql        | UTF8     | C       | C     |
+     someapp                 | dbsteward_ci | UTF8     | C       | C     |
+     template0               | pgsql        | UTF8     | C       | C     | =c/pgsql         +
+     |              |          |         |       | pgsql=CTc/pgsql
+     template1               | pgsql        | UTF8     | C       | C     | =c/pgsql         +
+     |              |          |         |       | pgsql=CTc/pgsql
+     (5 rows)
+
+     */
+
+    String[] lines = infoStreamConsumer.getOutput().split("\n");
+    for (String line : lines) {
+      if (line.contains("List of databases")) {
+        continue;
+      }
+      if (line.contains("Access privileges")) {
+        continue;
+      }
+      if (line.contains("+------")) {
+        continue;
+      }
+      if (line.contains(" rows)")) {
+        continue;
+      }
+      String[] line_chunks = line.split("\\|");
+      String dbname = line_chunks[0].trim();
+      // if the first col is not empty, its a database name
+      if (dbname.length() > 0) {
+        this.log.debug("dbname:" + dbname);
+        list.add(dbname);
+      } else {
+        this.log.debug("dbline:" + line);
+      }
+    }
+
+    return list;
   }
+
+  @Override
+  public boolean databaseExists(String name) throws MojoExecutionException {
+    List<String> list = this.listDatabases();
+    if (list.contains(name)) {
+      return true;
+    }
+    return false;
+  }
+
 }

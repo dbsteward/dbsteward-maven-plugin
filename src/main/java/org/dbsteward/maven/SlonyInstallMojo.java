@@ -29,6 +29,9 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -66,6 +69,12 @@ public class SlonyInstallMojo extends DBStewardAbstractMojo {
    */
   @Parameter(defaultValue = "${project.dbsteward.slonyReplicaSetIds}", property = "slonyReplicaSetIds", required = true)
   protected String[] slonyReplicaSetIds;
+  
+  /**
+   * Slony Configuration for node connections etc
+   */
+  @Parameter(property = "slonyConfiguration", required = true)
+  protected Map slonyConfiguration;
 
   /**
    * Compile creation sql specified in plugin config
@@ -102,8 +111,25 @@ public class SlonyInstallMojo extends DBStewardAbstractMojo {
       throw new MojoExecutionException("DBSteward output build file " + buildSqlFileName + " does not exist. Check DBSteward execution output.");
     }
     
+    // before building slony cluster with slonik create_nodes and subscribe
+    // create any replica node databases that do not exist
+    String[] nodes = slonyConfiguration.get("nodes").toString().split(",\\s*");
+    for(String node : nodes) {
+      String nodeDbHost = slonyConfiguration.get("node" + node + ".dbHost").toString().trim();
+      String nodeDbName = slonyConfiguration.get("node" + node + ".dbName").toString().trim();
+      // check that db exists on target node
+      // if not, create the database and run buildSqlFile on it
+      if ( ! dbExecutor.databaseExists(nodeDbName) ) {
+        getLog().info("SlonyInstallMojo node " + node + " database " + nodeDbName + " creating database");
+        dbExecutor.createDatabase(nodeDbName);
+        getLog().info("SlonyInstallMojo node " + node + " database " + nodeDbName + " executing script " + buildSqlFile);
+        dbExecutor.executeFile(nodeDbName, buildSqlFile);
+      }
+    }
+    
     // confirm slonnik output files for execution
     for(String replicaSetId : this.slonyReplicaSetIds) {
+
       String replicaSetSlonikFilePrefix = FilenameUtils.getBaseName(definitionFile.getPath());
       replicaSetSlonikFilePrefix += "_slony_replica_set_" + replicaSetId;
       
@@ -121,11 +147,10 @@ public class SlonyInstallMojo extends DBStewardAbstractMojo {
         throw new MojoExecutionException("DBSteward output slonik subscribe file " + replicaSetSubscribeSlonikFileName + " does not exist. Check DBSteward execution output.");
       }
       
-      //TODO: create database replicas that do not exist before building cluster with slonik commands
-      
       // execute the create nodes and subscribe scripts
       slonyExecutor.executeFile(replicaSetCreateNodesSlonikFile);
       slonyExecutor.executeFile(replicaSetSubscribeSlonikFile);
+
     }
   }
 

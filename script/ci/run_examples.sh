@@ -40,11 +40,33 @@ mvn clean  || exit 122
 mvn dbsteward:sql-diff dbsteward:db-upgrade ${mvn_props}  || exit 130
 
 
-# example 3 and 4 create the database from zero and install slony, so drop the someapp db before doing example 3
+# test that example 3 will make the master and replica databases on its own just with the goal slony-install specified
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_b;"
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_c;"
 
 
 cd ${basedir}  || exit 140
 cd example3  || exit 141
 mvn clean  || exit 142
-mvn dbsteward:sql-compile dbsteward:db-create dbsteward:slony-install ${mvn_props}  || exit 150
+mvn dbsteward:slony-install ${mvn_props}  || exit 150
+
+
+
+# example 3 and 4 create the database from zero and install slony, so drop the someapp db before doing example 3
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_b;"
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_c;"
+
+# create database and install slony
+cd ${basedir}  || exit 160
+cd example3  || exit 161
+mvn clean  || exit 162
+mvn dbsteward:sql-compile dbsteward:db-create dbsteward:slony-install ${mvn_props}  || exit 170
+
+# upgrade slony replicated database to example4
+cd ${basedir}  || exit 180
+cd example3  || exit 181
+mvn clean  || exit 182
+mvn dbsteward:slony-upgrade ${mvn_props}  || exit 190
+

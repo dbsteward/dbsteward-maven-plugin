@@ -14,8 +14,8 @@
     <slony clusterName="someapp">
       <!-- these slony nodes are local db replicas for continuous integration testing: -->
       <slonyNode id="101" comment="someapp primary db"      dbName="someapp"   dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
-      <slonyNode id="102" comment="someapp local replica A" dbName="someapp_a" dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
-      <slonyNode id="103" comment="someapp local replica B" dbName="someapp_b" dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <slonyNode id="102" comment="someapp local replica B" dbName="someapp_b" dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <slonyNode id="103" comment="someapp local replica C" dbName="someapp_c" dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
       <!-- remote nodes might look like this:
       <slonyNode id="101" comment="someapp primary db"        dbName="someapp" dbHost="someapp-db.prod"   dbUser="someapp_slony" dbPassword="drowssapynols1" />
       <slonyNode id="102" comment="someapp local replica db"  dbName="someapp" dbHost="someapp-db.backup" dbUser="someapp_slony" dbPassword="drowssapynols1" />

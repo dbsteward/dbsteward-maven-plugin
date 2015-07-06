@@ -92,7 +92,7 @@ public class DBCreateMojo extends DBStewardAbstractMojo {
 
     getLog().info("Loading database " + dbName + " on " + dbHost + ":" + dbPort);
     getLog().info("Executing script: " + buildSqlFile);
-    dbExecutor.executeFile(buildSqlFile);
+    dbExecutor.executeFile(dbName, buildSqlFile);
   }
 
 }

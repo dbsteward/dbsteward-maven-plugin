@@ -91,7 +91,7 @@ public class DBUpgradeMojo extends DBStewardAbstractMojo {
     getLog().info("Upgrading database " + dbName + " on " + dbHost + ":" + dbPort);
     for (File upgradeSqlFile : upgradeSqlFiles) {
       getLog().info("Executing upgrade script: " + upgradeSqlFile);
-      dbExecutor.executeFile(upgradeSqlFile);
+      dbExecutor.executeFile(dbName, upgradeSqlFile);
     }
   }
 
