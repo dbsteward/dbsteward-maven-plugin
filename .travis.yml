@@ -21,10 +21,10 @@ env:
     - TRAVIS_PGSQL8_DBNAME_MGMT=postgres
     - TRAVIS_PGSQL8_DBUSER_MGMT=postgres
     - TRAVIS_PGSQL8_DBPASS_MGMT=
-# use the pear package or tbe DBSteward branch specified
+      # use the git branch or composer package specified
     - DBSTEWARD_PACKAGING=git
-    - DBSTEWARD_BRANCH=master
-    - DBSTEWARD_PEAR_VERSION=1.3.11
+    - DBSTEWARD_GIT_BRANCH=master
+    - DBSTEWARD_COMPOSER_VERSION=dev-master
 
   # matrix env vars generate a new build config per set
   # we need to run the two test groups separately due to active_sql_format_autoloader
@@ -37,18 +37,18 @@ before_install:
 
 install:
   - sudo apt-get install php5
-  - sudo apt-get install php-pear
+  - sudo apt-get install php5-curl
   - sudo apt-get install php5-pgsql
   - sudo apt-get install php5-mysql
   - php --version
-  - pear version
-# plugin release branches install the corresponding dbsteward pear package
-# dev topic / master branches check out dbsteward instead of using the pear package
-  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then sudo pear channel-discover pear.dbsteward.org ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then sudo pear install "dbsteward/DBSteward-$DBSTEWARD_PEAR_VERSION" ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then which dbsteward ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "PEAR" ]]; then dbsteward ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/home/travis/build
+  # plugin release branches install the corresponding dbsteward composer package
+  # dev topic / master branches check out dbsteward git repo directly
+  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer -version ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer global require nkiraly/dbsteward:$DBSTEWARD_COMPOSER_VERSION ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then which dbsteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then dbsteward ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then sudo git clone --depth=50 --branch=$DBSTEWARD_GIT_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then export DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then find /home/travis/build/nkiraly/* ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then /home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
