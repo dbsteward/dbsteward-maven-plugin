@@ -29,10 +29,9 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
-import java.util.Collection;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
@@ -90,15 +89,16 @@ public class SQLDiffMojo extends DBStewardAbstractMojo {
     upgradeSqlFilePrefix = upgradeSqlFilePrefix + "_upgrade";
 
     // look for files matching prefix in outputDir
-    IOFileFilter fileFilter = new WildcardFileFilter(upgradeSqlFilePrefix + "*.*");
-    Collection<File> upgradeSqlFiles = FileUtils.listFiles(outputDir.getAbsoluteFile(), fileFilter, null);
+    FilenameFilter fileFilter = (FilenameFilter) new WildcardFileFilter(upgradeSqlFilePrefix + "*.sql");
+    File[] upgradeSqlFiles = outputDir.listFiles(fileFilter);
+    Arrays.sort(upgradeSqlFiles);
 
-    if (upgradeSqlFiles.isEmpty()) {
+    if (upgradeSqlFiles.length == 0) {
       throw new MojoExecutionException("DBSteward outputDir " + outputDir + " not found to contain any upgrade files. Check DBSteward execution output.");
     }
 
     // store in upgradeSqlFileNameCSL for reference by build chain
-    String upgradeSqlFileNameCSL = StringUtils.join(upgradeSqlFiles.iterator(), ",");
+    String upgradeSqlFileNameCSL = StringUtils.join(upgradeSqlFiles, ",");
     proj.getProperties().setProperty("project.dbsteward.output.upgradeSqlFileNameCSL", upgradeSqlFileNameCSL);
   }
 
