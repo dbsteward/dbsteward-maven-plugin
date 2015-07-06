@@ -24,16 +24,27 @@ else
   mvn_props+=" -D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT} " ;
 fi
 
-psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
+# example 1 and 2 create the database from zero and upgrade it, so drop the someapp db before doing example 1
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
 
 
 cd ${basedir}  || exit 100
 cd example1  || exit 101
-#mvn clean  || exit 102
+mvn clean  || exit 102
 mvn dbsteward:sql-compile dbsteward:db-create ${mvn_props}  || exit 110
 
 
-cd ${basedir}  || exit 150
-cd example2  || exit 151
-#mvn clean  || exit 152
-mvn dbsteward:sql-diff dbsteward:db-upgrade ${mvn_props}  || exit 160
+cd ${basedir}  || exit 120
+cd example2  || exit 121
+mvn clean  || exit 122
+mvn dbsteward:sql-diff dbsteward:db-upgrade ${mvn_props}  || exit 130
+
+
+# example 3 and 4 create the database from zero and install slony, so drop the someapp db before doing example 3
+PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
+
+
+cd ${basedir}  || exit 140
+cd example3  || exit 141
+mvn clean  || exit 142
+mvn dbsteward:sql-compile dbsteward:db-create dbsteward:slony-install ${mvn_props}  || exit 150

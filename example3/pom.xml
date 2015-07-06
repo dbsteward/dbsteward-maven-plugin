@@ -1,0 +1,104 @@
+<!--
+ * This software is licensed under the BSD (2 Clause) license.
+ * http://opensource.org/licenses/BSD-2-Clause
+ *
+ * Copyright (c) 2014, Nicholas J Kiraly, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.dbsteward.maven</groupId>
+  <artifactId>dbsteward-maven-plugin-example3</artifactId>
+  <version>1.4.0-SNAPSHOT</version>
+
+  <name>DBSteward Maven Plugin Example 3</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.dbsteward.path>dbsteward</project.dbsteward.path>
+    <project.dbsteward.sqlFormat>pgsql8</project.dbsteward.sqlFormat>
+    <project.dbsteward.definitionFile>example3.xml</project.dbsteward.definitionFile>
+    <project.dbsteward.slonyDefinitionFile>example3_slony.xml</project.dbsteward.slonyDefinitionFile>
+    <project.dbsteward.database.host>localhost</project.dbsteward.database.host>
+    <project.dbsteward.database.port>5432</project.dbsteward.database.port>
+    <project.dbsteward.database.name>someapp</project.dbsteward.database.name>
+    <project.dbsteward.database.username>dbsteward_ci</project.dbsteward.database.username>
+    <project.dbsteward.database.password>password1</project.dbsteward.database.password>
+    <project.dbsteward.database.bootstrap>postgres</project.dbsteward.database.bootstrap>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.dbsteward.maven</groupId>
+        <artifactId>dbsteward-maven-plugin</artifactId>
+        <version>1.4.0-SNAPSHOT</version>
+        <configuration>
+          <!--
+            DBSteward relative or absolute binary, available on your path
+            example values:
+            dbsteward                           if you installed DBSteward via Composer
+            /home/dev/DBSteward/bin/dbsteward   your git working copy
+          -->
+          <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
+          <!-- Target database sql format flavor -->
+          <sqlFormat>${project.dbsteward.sqlFormat}</sqlFormat>
+          <!-- Relative or absolute path to DBSteward database definition XML file -->
+          <definitionFile>${project.dbsteward.definitionFile}</definitionFile>
+          <!-- Relative or absolute path to DBSteward slony node definition XML file -->
+          <slonyDefinitionFile>${project.dbsteward.slonyDefinitionFile}</slonyDefinitionFile>
+          <slonyReplicaSetIds>
+            <param>500</param>
+            <param>600</param>
+          </slonyReplicaSetIds>
+          <!-- database connection information -->
+          <dbHost>${project.dbsteward.database.host}</dbHost>
+          <dbPort>${project.dbsteward.database.port}</dbPort>
+          <dbName>${project.dbsteward.database.name}</dbName>
+          <dbUsername>${project.dbsteward.database.username}</dbUsername>
+          <dbPassword>${project.dbsteward.database.password}</dbPassword>
+          <dbBootstrap>${project.dbsteward.database.bootstrap}</dbBootstrap>
+          <!-- to not create the database to be loaded, specify skipDBCreate
+          <skipDBCreate>true</skipDBCreate>
+          -->
+        </configuration>
+      </plugin>
+      <!--
+        Goal Usage
+
+        Generate database creation SQL file by specifying sql-compile goal
+        $ mvn dbsteward:sql-compile
+
+        Combine that with db-create to create the database
+        $ mvn dbsteward:sql-compile dbsteward:db-create
+        
+        Combine that with slony-install to create the slony replicated database cluster
+        $ mvn dbsteward:sql-compile dbsteward:db-create dbsteward:slony-install
+      -->
+    </plugins>
+  </build>
+
+</project>

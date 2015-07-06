@@ -65,6 +65,7 @@ before_script:
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp WITH LOGIN;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_readonly;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_dba;" ; fi
+  - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_slony WITH LOGIN SUPERUSER PASSWORD 'drowssapynols1';" ; fi
   #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;" ; fi
 
 

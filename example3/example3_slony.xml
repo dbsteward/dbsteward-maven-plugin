@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  example1.xml
+  DBSteward maven plugin example database structure definition
+-->
+<dbsteward>
+  <database>
+    <role>
+      <application>someapp</application>
+      <owner>someapp_dba</owner>
+      <replication>someapp_slony</replication>
+      <readonly>someapp_readonly</readonly>
+    </role>
+    <slony clusterName="someapp">
+      <!-- these slony nodes are local db replicas for continuous integration testing: -->
+      <slonyNode id="101" comment="someapp primary db"      dbName="someapp"   dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <slonyNode id="102" comment="someapp local replica A" dbName="someapp_a" dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <slonyNode id="103" comment="someapp local replica B" dbName="someapp_b" dbHost="localhost" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <!-- remote nodes might look like this:
+      <slonyNode id="101" comment="someapp primary db"        dbName="someapp" dbHost="someapp-db.prod"   dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <slonyNode id="102" comment="someapp local replica db"  dbName="someapp" dbHost="someapp-db.backup" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      <slonyNode id="103" comment="someapp remote replica db" dbName="someapp" dbHost="someapp-db.remote" dbUser="someapp_slony" dbPassword="drowssapynols1" />
+      -->
+      <slonyReplicaSet id="500" originNodeId="101" upgradeSetId="501" comment="user account replication">
+        <slonyReplicaSetNode id="102" providerNodeId="101" />
+        <slonyReplicaSetNode id="103" providerNodeId="102" />
+      </slonyReplicaSet>
+      <slonyReplicaSet id="600" originNodeId="101" upgradeSetId="601" comment="search results synchronization">
+        <slonyReplicaSetNode id="102" providerNodeId="101" />
+        <slonyReplicaSetNode id="103" providerNodeId="102" />
+      </slonyReplicaSet>
+    </slony>
+  </database>
+</dbsteward>
