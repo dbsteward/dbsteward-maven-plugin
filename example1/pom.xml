@@ -58,7 +58,7 @@
         <configuration>
           <!--
             DBSteward relative or absolute binary, available on your path
-            example values:
+            sample values:
             dbsteward                           if you installed DBSteward via Composer
             /home/dev/DBSteward/bin/dbsteward   your git working copy
           -->

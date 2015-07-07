@@ -31,17 +31,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.dbsteward.maven</groupId>
-  <artifactId>dbsteward-maven-plugin-example3</artifactId>
+  <artifactId>dbsteward-maven-plugin-example4</artifactId>
   <version>1.4.0-SNAPSHOT</version>
 
-  <name>DBSteward Maven Plugin Example 3</name>
+  <name>DBSteward Maven Plugin Example 4</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.dbsteward.path>dbsteward</project.dbsteward.path>
     <project.dbsteward.sqlFormat>pgsql8</project.dbsteward.sqlFormat>
-    <project.dbsteward.definitionFile>example3.xml</project.dbsteward.definitionFile>
-    <project.dbsteward.slonyDefinitionFile>example3_slony.xml</project.dbsteward.slonyDefinitionFile>
+    <project.dbsteward.oldDefinitionFile>../example3/example3.xml</project.dbsteward.oldDefinitionFile>
+    <project.dbsteward.oldSlonyDefinitionFile>../example3/example3_slony.xml</project.dbsteward.oldSlonyDefinitionFile>
+    <project.dbsteward.newDefinitionFile>example4.xml</project.dbsteward.newDefinitionFile>
+    <project.dbsteward.newSlonyDefinitionFile>example4_slony.xml</project.dbsteward.newSlonyDefinitionFile>
     <project.dbsteward.database.host>localhost</project.dbsteward.database.host>
     <project.dbsteward.database.port>5432</project.dbsteward.database.port>
     <project.dbsteward.database.name>someapp</project.dbsteward.database.name>
@@ -66,10 +68,14 @@
           <dbstewardBinaryPath>${project.dbsteward.path}</dbstewardBinaryPath>
           <!-- Target database sql format flavor -->
           <sqlFormat>${project.dbsteward.sqlFormat}</sqlFormat>
-          <!-- Relative or absolute path to DBSteward database definition XML file -->
-          <definitionFile>${project.dbsteward.definitionFile}</definitionFile>
-          <!-- Relative or absolute path to DBSteward slony node definition XML file -->
-          <slonyDefinitionFile>${project.dbsteward.slonyDefinitionFile}</slonyDefinitionFile>
+          <!-- Relative or absolute path to old (previous) database definition XML file -->
+          <oldDefinitionFile>${project.dbsteward.oldDefinitionFile}</oldDefinitionFile>
+          <!-- Relative or absolute path to new (current) DBSteward slony node definition XML file -->
+          <oldSlonyDefinitionFile>${project.dbsteward.slonyDefinitionFile}</oldSlonyDefinitionFile>
+          <!-- Relative or absolute path to new (current) database definition XML file -->
+          <newDefinitionFile>${project.dbsteward.newDefinitionFile}</newDefinitionFile>
+          <!-- Relative or absolute path to new (current) DBSteward slony node definition XML file -->
+          <newSlonyDefinitionFile>${project.dbsteward.slonyDefinitionFile}</newSlonyDefinitionFile>
           <!-- database connection information -->
           <dbHost>${project.dbsteward.database.host}</dbHost>
           <dbPort>${project.dbsteward.database.port}</dbPort>
@@ -80,12 +86,12 @@
           <!-- to not create the database to be loaded, specify skipDBCreate
           <skipDBCreate>true</skipDBCreate>
           -->
-          <!-- Slony replica set list to operate on, matched to example3_slony.xml configuration -->
+          <!-- Slony replica set list to operate on, matched to example4_slony.xml configuration -->
           <slonyReplicaSetIds>
             <param>500</param>
             <param>600</param>
           </slonyReplicaSetIds>
-          <!-- Slony node list and configuration details, matched to example3_slony.xml configuration -->
+          <!-- Slony node list and configuration details, matched to example4_slony.xml configuration -->
           <slonyConfiguration>
             <nodes>101,102,103</nodes>
             <node101.dbHost>localhost</node101.dbHost>
@@ -99,15 +105,9 @@
       </plugin>
       <!--
         Goal Usage
-
-        Generate database creation SQL file by specifying sql-compile goal
-        $ mvn dbsteward:sql-compile
-
-        Combine that with db-create to create the database
-        $ mvn dbsteward:sql-compile dbsteward:db-create
         
-        Combine that with slony-install to create the slony replicated database cluster
-        $ mvn dbsteward:sql-compile dbsteward:db-create dbsteward:slony-install
+        Upgrade a database cluster replicated with slony by calling the slony-upgrade goal
+        $ mvn dbsteward:slony-upgrade
       -->
     </plugins>
   </build>

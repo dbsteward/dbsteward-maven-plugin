@@ -4,7 +4,7 @@ package org.dbsteward.maven;
  * This software is licensed under the BSD (2 Clause) license.
  * http://opensource.org/licenses/BSD-2-Clause
  *
- * Copyright (c) 2014, Nicholas J Kiraly, All rights reserved.
+ * Copyright (c) 2015, Nicholas J Kiraly, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,8 +29,6 @@ package org.dbsteward.maven;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.execution.MavenSession;
@@ -59,7 +57,7 @@ public class SlonyInstallMojo extends DBStewardAbstractMojo {
   protected File definitionFile;
   
   /**
-   * Relative or absolute path to DBSteward database definition slony configuration XML file
+   * Relative or absolute path to DBSteward database slony configuration XML file
    */
   @Parameter(defaultValue = "${project.dbsteward.slonyDefinitionFile}", property = "slonyDefinitionFile", required = true)
   protected File slonyDefinitionFile;

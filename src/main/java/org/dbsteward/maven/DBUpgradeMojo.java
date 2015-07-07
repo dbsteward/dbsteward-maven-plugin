@@ -78,7 +78,7 @@ public class DBUpgradeMojo extends DBStewardAbstractMojo {
       throw new MojoExecutionException("project.dbsteward.output.upgradeFileNameCSL is not set. Did you run sql-diff before this goal?");
     }
     String[] upgradeSqlFileNames = StringUtils.split(upgradeSqlFileNameCSL, ",");
-    List<File> upgradeSqlFiles = new ArrayList<File>();
+    List<File> upgradeSqlFiles = new ArrayList<>();
     // check that upgrade files named exist
     for (String upgradeSqlFileName : upgradeSqlFileNames) {
       File uf = new File(upgradeSqlFileName);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  example1.xml
+  example3.xml
   DBSteward maven plugin example database structure definition
 -->
 <dbsteward>
@@ -45,8 +45,8 @@
         </row>
       </rows>
     </table>
-    <trigger name="user_audit" sqlFormat="mysql5" table="user" when="BEFORE" event="INSERT" function="EXECUTE user_audit(NEW)"/>
-    <table name="user_status_list" owner="ROLE_OWNER" slonySetId="500" slonyId="102" primaryKey="user_status_list_id">
+    <trigger name="user_audit" sqlFormat="mysql5" table="users" when="BEFORE" event="INSERT" function="EXECUTE user_audit(NEW)"/>
+    <table name="user_status_list" owner="ROLE_OWNER" primaryKey="user_status_list_id" slonySetId="500" slonyId="102">
       <column name="user_status_list_id" type="int" />
       <column name="is_visible" type="boolean" null="false" default="true" />
       <column name="can_login" type="boolean" null="false" default="true" />

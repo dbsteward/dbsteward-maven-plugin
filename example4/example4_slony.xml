@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  example3_slony.xml
+  example4_slony.xml
   DBSteward maven plugin example slony node and replica set definition
 -->
 <dbsteward>
