@@ -128,8 +128,9 @@ public class SlonyUpgradeMojo extends DBStewardAbstractMojo {
     for (String replicaSetId : this.slonyReplicaSetIds) {
 
       // calculate upgrade file prefix
-      String upgradeReplicaSetSlonikFilePrefix = FilenameUtils.getBaseName(newDefinitionFile.getPath());
-      upgradeReplicaSetSlonikFilePrefix += "_upgrade_slony_replica_set_" + replicaSetId;
+      String upgradeReplicaSetSlonikFilePrefix = outputDir + File.separator
+                + FilenameUtils.getBaseName(newDefinitionFile.getPath())
+                + "_upgrade_slony_replica_set_" + replicaSetId;
 
       String upgradeStage1SlonikFileName = upgradeReplicaSetSlonikFilePrefix + "_stage1.slonik";
       // confirm stage 1 slonik output file is present
