@@ -127,7 +127,11 @@ public class SlonyInstallMojo extends DBStewardAbstractMojo {
       }
     }
     
-    // confirm slonnik output files for execution
+    // flag to only create the slony nodes if not done before
+    boolean nodesIniitialized = false;
+    // TODO: what about replica sets that utilize different nodes?
+    
+    // confirm slonik output files and execute them
     for(String replicaSetId : this.slonyReplicaSetIds) {
 
       String replicaSetSlonikFilePrefix = FilenameUtils.getBaseName(definitionFile.getPath());
@@ -147,8 +151,13 @@ public class SlonyInstallMojo extends DBStewardAbstractMojo {
         throw new MojoExecutionException("DBSteward output slonik subscribe file " + replicaSetSubscribeSlonikFileName + " does not exist. Check DBSteward execution output.");
       }
       
-      // execute the create nodes and subscribe scripts
-      slonyExecutor.executeFile(replicaSetCreateNodesSlonikFile);
+      // create the slony nodes if not done before
+      if (!nodesIniitialized) {
+        slonyExecutor.executeFile(replicaSetCreateNodesSlonikFile);
+        nodesIniitialized = true;
+      }
+
+      // subscribe the various nodes to this replica set with the subscribe slonik
       slonyExecutor.executeFile(replicaSetSubscribeSlonikFile);
 
     }

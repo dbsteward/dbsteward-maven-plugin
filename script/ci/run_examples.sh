@@ -43,14 +43,16 @@ mvn clean  || exit 122
 mvn dbsteward:sql-diff dbsteward:db-upgrade ${mvn_props}  || exit 130
 
 
+
 # test that example 3 will make the master and replica databases on its own just with the goal slony-install specified
+
+# kill all slons to make sure cluster remnants are stopped
+killall slon
+
 # drop all dbs that example 3 will make or replicate to
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_b;"
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_c;"
-
-# kill all slons to make sure cluster remnants are stopped
-killall slon
 
 cd ${basedir}  || exit 140
 cd example3  || exit 141
@@ -64,16 +66,17 @@ slon -f slon/slon-someapp_c.conf -p slon/someapp_c.pid > slon/someapp_c.log 2>&1
 mvn dbsteward:slony-install ${mvn_props}  || exit 150
 
 
+
 # example 3 and 4 create the database from zero and install and upgrade via slony
 # so drop the someapp db before doing example 3
+
+# kill all slons to make sure cluster remnants are stopped
+killall slon
 
 # drop all dbs that example 4 will make or replicate to
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_b;"
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp_c;"
-
-# kill all slons to make sure cluster remnants are stopped
-killall slon
 
 # create database and install slony
 cd ${basedir}  || exit 160
