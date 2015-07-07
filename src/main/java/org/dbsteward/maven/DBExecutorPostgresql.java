@@ -102,7 +102,7 @@ public class DBExecutorPostgresql implements DBExecutor {
     StringStreamConsumer errorStream = new StringStreamConsumer();
 
     try {
-      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 30);
       if (returnCode != 0) {
         throw new MojoExecutionException("Unexpected Tool Return Code " + returnCode + " - Error Buffer = " + errorStream.getOutput());
       }

@@ -60,7 +60,7 @@ public class SlonyExecutor {
     CommandLineUtils.StringStreamConsumer errorStream = new CommandLineUtils.StringStreamConsumer();
 
     try {
-      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 10);
+      int returnCode = CommandLineUtils.executeCommandLine(commandLine, pluginInfoStream, errorStream, 0);
       if (returnCode != 0) {
         throw new MojoExecutionException("Unexpected Tool Return Code " + returnCode + " - Error Buffer = " + errorStream.getOutput());
       }
@@ -75,6 +75,8 @@ public class SlonyExecutor {
     String[] args = {
       f.toString()
     };
+    // NOTICE: if slons aren't running or aren't doing their job,
+    // CommandLineUtils.executeCommandLine() may hang for a long time waiting for commands to complete
     executeTool(slonik, args);
   }
 
