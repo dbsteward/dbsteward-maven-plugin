@@ -46,6 +46,7 @@ install:
   # dev topic / master branches check out dbsteward git repo directly
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer -version ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer global require nkiraly/dbsteward:$DBSTEWARD_COMPOSER_VERSION ; fi
+  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; export PATH=$PATH:~/.composer/vendor/bin ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then which dbsteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then dbsteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then git clone --depth=50 --branch=$DBSTEWARD_GIT_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
