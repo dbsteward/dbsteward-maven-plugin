@@ -22,7 +22,7 @@ env:
     - TRAVIS_PGSQL8_DBUSER_MGMT=postgres
     - TRAVIS_PGSQL8_DBPASS_MGMT=
       # use the git branch or composer package specified
-    - DBSTEWARD_PACKAGING=git
+    - DBSTEWARD_PACKAGING=composer
     - DBSTEWARD_GIT_BRANCH=master
     - DBSTEWARD_COMPOSER_VERSION=dev-master
 
