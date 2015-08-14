@@ -36,6 +36,7 @@ before_install:
   - sudo apt-get update
 
 install:
+  - pwd
   - sudo apt-get install php5
   - sudo apt-get install php5-curl
   - sudo apt-get install php5-pgsql
@@ -54,7 +55,7 @@ install:
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then export DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
   #- if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then find /home/travis/build/nkiraly/* ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then /home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
-  - cd /home/travis/build
+  - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then cd /home/travis/build ; fi
 
 
 before_script:
