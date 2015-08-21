@@ -2,7 +2,7 @@ dbsteward-maven-plugin
 ======================
 DBSteward maven plugin for deploying and upgrading your DBSteward-defined database
 
-nkiraly/dbsteward-maven-plugin/master Build Status: [![nkiraly/dbsteward-maven-plugin/master Build Status](https://travis-ci.org/nkiraly/dbsteward-maven-plugin.png?branch=master)](https://travis-ci.org/nkiraly/dbsteward-maven-plugin)
+nkiraly/dbsteward-maven-plugin/v1.4.0 Build Status: [![nkiraly/dbsteward-maven-plugin/v1.4.0 Build Status](https://travis-ci.org/nkiraly/dbsteward-maven-plugin.png?branch=v1.4.0)](https://travis-ci.org/nkiraly/dbsteward-maven-plugin)
 
 
 Usage Guide
@@ -52,7 +52,7 @@ $ mvn install
     </plugins>
   </build>
 ```
-For more detailed examples, see [example1](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example1/pom.xml)
+For more detailed examples, see [example1](https://github.com/nkiraly/dbsteward-maven-plugin/blob/v1.4.0/example1/pom.xml)
 
 
 4) Run the plugin sql-compile goal to build your database creation SQL file:
@@ -103,7 +103,7 @@ Follow Steps 1 and 2 from Building a Database
     </plugins>
   </build>
 ```
-For more detailed examples, see [example2](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example2/pom.xml)
+For more detailed examples, see [example2](https://github.com/nkiraly/dbsteward-maven-plugin/blob/v1.4.0/example2/pom.xml)
 
 
 4) Run the plugin sql-diff goal to build your database upgrade SQL files:
@@ -127,4 +127,4 @@ $ mvn dbsteward:sql-diff dbsteward:db-upgrade
 ```
 
 
-For examples of managing Slony replicated databases with dbsteward-maven-plugin, see [example3](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example3/pom.xml) and [example4](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example3/pom.xml)
+For examples of managing Slony replicated databases with dbsteward-maven-plugin, see [example3](https://github.com/nkiraly/dbsteward-maven-plugin/blob/v1.4.0/example3/pom.xml) and [example4](https://github.com/nkiraly/dbsteward-maven-plugin/blob/v1.4.0/example3/pom.xml)
