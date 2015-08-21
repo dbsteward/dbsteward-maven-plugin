@@ -23,8 +23,8 @@ env:
     - TRAVIS_PGSQL8_DBPASS_MGMT=
       # use the git branch or composer package specified
     - DBSTEWARD_PACKAGING=composer
-    - DBSTEWARD_GIT_BRANCH=master
-    - DBSTEWARD_COMPOSER_VERSION=dev-master
+    - DBSTEWARD_GIT_BRANCH=1.4.0
+    - DBSTEWARD_COMPOSER_VERSION=1.4.0
 
   # matrix env vars generate a new build config per set
   # we need to run the two test groups separately due to active_sql_format_autoloader
