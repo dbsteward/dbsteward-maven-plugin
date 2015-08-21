@@ -10,7 +10,6 @@ Usage Guide
 Here is a crash course for getting up and running building databases from DBSteward definitions as part of your maven build process.
 
 
-
 ## Building a Database
 1) Check out the plugin code and mvn install the artifact to your m2 repo
 ```bash
@@ -53,7 +52,7 @@ $ mvn install
     </plugins>
   </build>
 ```
-For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example1/pom.xml
+For more detailed examples, see [example1](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example1/pom.xml
 
 
 4) Run the plugin sql-compile goal to build your database creation SQL file:
@@ -82,7 +81,7 @@ $ mvn dbsteward:sql-compile dbsteward:db-create
 ## Upgrading a Database
 Follow Steps 1 and 2 from Building a Database
 
-3) Define the plugin as part of the build process in your pom.xml, specifying your old (previous) and new (current) defintion file in the plugin configuration:
+3) Define the plugin as part of the build process in your pom.xml, specifying your old (previous) and new (current) definition file in the plugin configuration:
 ```XML
   <build>
     <plugins>
@@ -104,7 +103,7 @@ Follow Steps 1 and 2 from Building a Database
     </plugins>
   </build>
 ```
-For more detailed examples, see https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example2/pom.xml
+For more detailed examples, see [example2](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example2/pom.xml
 
 
 4) Run the plugin sql-diff goal to build your database upgrade SQL files:
@@ -127,3 +126,5 @@ Note: Steps 4 and 5 can be combined to compile and run your sql guaranteed fresh
 $ mvn dbsteward:sql-diff dbsteward:db-upgrade
 ```
 
+
+For examples of managing Slony replicated databases with dbsteward-maven-plugin, see [example3](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example3/pom.xml) and [example4](https://github.com/nkiraly/dbsteward-maven-plugin/blob/master/example3/pom.xml
