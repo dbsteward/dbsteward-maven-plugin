@@ -44,7 +44,7 @@ install:
   - sudo apt-get install postgresql-9.3-postgis-2.1
   - sudo apt-get install postgresql-9.3-slony1-2
   - curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
-  - apt --installed list
+  - dpkg -l
   - php --version
   - composer --version
   # plugin release branches install the corresponding dbsteward composer package
