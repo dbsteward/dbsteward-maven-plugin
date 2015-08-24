@@ -41,8 +41,12 @@ install:
   - sudo apt-get install php5-curl
   - sudo apt-get install php5-pgsql
   - sudo apt-get install php5-mysql
-  - php --version
+  - sudo apt-get install postgresql-9.3-postgis-2.1
+  - sudo apt-get install postgresql-9.3-slony1-2
   - curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+  - apt --installed list
+  - php --version
+  - composer --version
   # plugin release branches install the corresponding dbsteward composer package
   # dev topic / master branches check out dbsteward git repo directly
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer -version ; fi
