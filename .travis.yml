@@ -21,7 +21,9 @@ addons:
       - php5-curl
 # integration test slon errors in such as
 # slon: no process found
-# will be fixed by https://github.com/travis-ci/apt-package-whitelist/issues/1015
+# will be fixed by
+# https://github.com/travis-ci/apt-package-whitelist/issues/1015
+# https://github.com/travis-ci/apt-package-whitelist/pull/1039
 #      - postgresql-9.3-slony1-2
 
 env:
