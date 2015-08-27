@@ -53,8 +53,9 @@ install:
   - pwd
   - dpkg -l
   - php --version
-  - curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/composer --filename=composer
-  - export PATH=$PATH:$HOME/composer/
+  - mkdir $HOME/bin
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
+  - export PATH=$PATH:$HOME/bin/
   - composer --version
   # plugin release branches install the corresponding dbsteward composer package
   # dev topic / master branches check out dbsteward git repo directly
