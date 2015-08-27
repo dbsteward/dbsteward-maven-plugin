@@ -1,8 +1,25 @@
+# consider this a java project.
+# PHP runtime dependencies for DBSteward will be done through apt packages and install sections
 language: java
 
 jdk:
   - openjdk7
 #  - oraclejdk7
+
+# no sudo to allow running on new travis docker new container infrastructure
+# http://docs.travis-ci.com/user/migrating-from-legacy
+sudo: false
+
+# dependencies of dbsteward, the maven plugin, or their fixtures
+addons:
+  postgresql: "9.3"
+  apt:
+    packages:
+      - php5
+      - php5-pgsql
+      - php5-mysql
+      - php5-curl
+#      - postgresql-9.3-slony1-2
 
 env:
   # global env vars are injected into the environment of all build configs
@@ -23,33 +40,24 @@ env:
     - TRAVIS_PGSQL8_DBPASS_MGMT=
       # use the git branch or composer package specified
     - DBSTEWARD_PACKAGING=composer
-    - DBSTEWARD_GIT_BRANCH=master
     - DBSTEWARD_COMPOSER_VERSION=dev-master
+    - DBSTEWARD_GIT_BRANCH=master
 
   # matrix env vars generate a new build config per set
-  # we need to run the two test groups separately due to active_sql_format_autoloader
+  # run pgsql8 and mysql5 tests separately
   matrix:
     - DBSTEWARD_SQLFORMAT=pgsql8
 #    - DBSTEWARD_SQLFORMAT=mysql5
 
-before_install:
-  - sudo apt-get update
-
 install:
   - pwd
-  - sudo apt-get install php5
-  - sudo apt-get install php5-curl
-  - sudo apt-get install php5-pgsql
-  - sudo apt-get install php5-mysql
-  - sudo apt-get install postgresql-9.3-postgis-2.1
-  - sudo apt-get install postgresql-9.3-slony1-2
-  - curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
   - dpkg -l
   - php --version
+  - curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=$HOME/composer --filename=composer
+  - export PATH=$PATH:$HOME/composer/
   - composer --version
   # plugin release branches install the corresponding dbsteward composer package
   # dev topic / master branches check out dbsteward git repo directly
-  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer -version ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer global require nkiraly/dbsteward:$DBSTEWARD_COMPOSER_VERSION ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then export PATH=$PATH:~/.composer/vendor/bin ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then which dbsteward ; fi
@@ -61,19 +69,19 @@ install:
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then /home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then cd /home/travis/build ; fi
 
-
 before_script:
-  - mvn clean install
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then psql -U postgres -d postgres -c "CREATE USER dbsteward_ci WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password1';" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "CREATE DATABASE someapp TEMPLATE template0 ENCODING 'UTF8';" ; fi
   #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -l ; fi
-  #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "SELECT * FROM pg_language;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp WITH LOGIN;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_readonly;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_dba;" ; fi
   - if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d someapp -c "CREATE ROLE someapp_slony WITH LOGIN SUPERUSER PASSWORD 'drowssapynols1';" ; fi
   #- if [[ "$DBSTEWARD_SQLFORMAT" == "pgsql8" ]]; then PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;" ; fi
 
-
-# by default, travis runs "mvn test", but we want to make sure that after installing the plugin, the examples work
-script: ./script/ci/run_examples.sh
+# by default, travis runs "mvn test", but let's be explicit:
+# install the plugin
+# then run the continuous integration script with the project examples
+script:
+  - mvn clean install
+  - ./script/ci/run_examples.sh
