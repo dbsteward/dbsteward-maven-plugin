@@ -15,7 +15,7 @@ addons:
   postgresql: "9.3"
   apt:
     packages:
-      - php5
+      - php5-cli
       - php5-pgsql
       - php5-mysql
       - php5-curl
