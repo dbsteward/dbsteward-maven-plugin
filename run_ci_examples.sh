@@ -24,7 +24,7 @@ else
   mvn_props+=" -D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT} " ;
 fi
 
-# kill all slons to make sure cluster remnants are stopped
+# kill all slons to make sure any slony test fixture cluster remnants are stopped
 killall slon
 
 # example 1 and 2 create the database from zero and upgrade it, so drop the someapp db before doing example 1
@@ -46,7 +46,7 @@ mvn dbsteward:sql-diff dbsteward:db-upgrade ${mvn_props}  || exit 130
 
 # test that example 3 will make the master and replica databases on its own just with the goal slony-install specified
 
-# kill all slons to make sure cluster remnants are stopped
+# kill all slons to make sure any slony test fixture cluster remnants are stopped
 killall slon
 
 # drop all dbs that example 3 will make or replicate to
@@ -67,8 +67,9 @@ mvn dbsteward:slony-install ${mvn_props}  || exit 150
 
 
 
+# example 4 testing fixture starts here. note that we remake the replicated db with example 3 with a full install
 # example 3 and 4 create the database from zero and install and upgrade via slony
-# so drop the someapp db before doing example 3
+# so drop the someapp db before doing example 4 with deliberate set up by example 3
 
 # kill all slons to make sure cluster remnants are stopped
 killall slon

@@ -48,8 +48,10 @@ public class SlonyExecutor {
     this.log = log;
   }
   
-  protected void executeTool(File tool, String... args) throws MojoExecutionException {
-    Commandline commandLine = new Commandline();
+  protected void executeTool(Commandline commandLine, File tool, String... args) throws MojoExecutionException {
+    if ( commandLine == null ) {
+      commandLine = new Commandline();
+    }
     commandLine.setExecutable(tool.getPath());
 
     for (String arg : args) {
@@ -75,9 +77,16 @@ public class SlonyExecutor {
     String[] args = {
       f.toString()
     };
+
+    Commandline slonikCommandLine = new Commandline();
+    // set slonik command working directory to the dir the slonik file f is in
+    // in case if a slonik file #includes another slonik file
+    // or does an EXECUTE SCRIPT ( FILENAME = ) using a relative path
+    slonikCommandLine.setWorkingDirectory(f.getParentFile());
+
     // NOTICE: if slons aren't running or aren't doing their job,
     // CommandLineUtils.executeCommandLine() may hang for a long time waiting for commands to complete
-    executeTool(slonik, args);
+    executeTool(slonikCommandLine, slonik, args);
   }
 
 }
