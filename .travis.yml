@@ -85,4 +85,4 @@ before_script:
 # then run the continuous integration script with the project examples
 script:
   - mvn clean install
-  - ./script/ci/run_examples.sh
+  - ./run_ci_examples.sh
