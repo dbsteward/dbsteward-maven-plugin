@@ -130,9 +130,9 @@ public class DBExecutorPostgresql implements DBExecutor {
       "--host=" + this.host,
       "--port=" + this.port,
       "--username=" + this.username,
-      name,
       "--encoding=" + this.dbEncoding,
-      "--template=" + this.dbTemplate
+      "--template=" + this.dbTemplate,
+      name
     };
     executeTool(createdb, args);
   }
