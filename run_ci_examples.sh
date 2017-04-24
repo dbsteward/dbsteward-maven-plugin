@@ -24,8 +24,6 @@ else
   mvn_props+=" -D project.dbsteward.sqlFormat=${DBSTEWARD_SQLFORMAT} " ;
 fi
 
-# kill all slons to make sure any slony test fixture cluster remnants are stopped
-killall slon
 
 # example 1 and 2 create the database from zero and upgrade it, so drop the someapp db before doing example 1
 PGPASSWORD=password1 psql -U dbsteward_ci -d postgres -c "DROP DATABASE someapp;"
