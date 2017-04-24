@@ -1,10 +1,9 @@
-# consider this a java project.
-# PHP runtime dependencies for DBSteward will be done through apt packages and install sections
-language: java
-
-jdk:
-  - openjdk7
-#  - oraclejdk7
+# consider this a PHP project.
+# we will install OpenJDK 7 dependencies through apt packages and install sections
+language: php
+php:
+  - 5.5
+  - 5.6
 
 # no sudo to allow running on new travis docker new container infrastructure
 # http://docs.travis-ci.com/user/migrating-from-legacy
@@ -12,13 +11,13 @@ sudo: false
 
 # dependencies of dbsteward, the maven plugin, or their fixtures
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
   apt:
     packages:
       - php5-cli
       - php5-pgsql
       - php5-mysql
-      - php5-curl
+      - openjdk-7-jdk
 # integration test slon errors in such as
 # slon: no process found
 # will be fixed by

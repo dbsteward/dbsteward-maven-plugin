@@ -24,7 +24,7 @@ $ mvn install
     <dependency>
       <groupId>org.dbsteward.maven</groupId>
       <artifactId>dbsteward-maven-plugin</artifactId>
-      <version>1.3.11-SNAPSHOT</version>
+      <version>1.4.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 ```
@@ -37,7 +37,7 @@ $ mvn install
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
-        <version>1.3.11-SNAPSHOT</version>
+        <version>1.4.1-SNAPSHOT</version>
         <configuration>
           <sqlFormat>pgsql8</sqlFormat>
           <definitionFile>example.xml</definitionFile>
@@ -88,7 +88,7 @@ Follow Steps 1 and 2 from Building a Database
       <plugin>
         <groupId>org.dbsteward.maven</groupId>
         <artifactId>dbsteward-maven-plugin</artifactId>
-        <version>1.3.11-SNAPSHOT</version>
+        <version>1.4.1-SNAPSHOT</version>
         <configuration>
           <sqlFormat>pgsql8</sqlFormat>
           <oldDefinitionFile>example1.xml</oldDefinitionFile>
