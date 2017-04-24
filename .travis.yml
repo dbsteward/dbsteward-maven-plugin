@@ -1,10 +1,9 @@
-# consider this a java project.
-# PHP runtime dependencies for DBSteward will be done through apt packages and install sections
-language: java
-
-jdk:
-  - openjdk7
-#  - oraclejdk7
+# consider this a PHP project.
+# we will install OpenJDK 7 dependencies through apt packages and install sections
+language: php
+php:
+  - 5.5
+  - 5.6
 
 # no sudo to allow running on new travis docker new container infrastructure
 # http://docs.travis-ci.com/user/migrating-from-legacy
@@ -12,13 +11,13 @@ sudo: false
 
 # dependencies of dbsteward, the maven plugin, or their fixtures
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
   apt:
     packages:
       - php5-cli
       - php5-pgsql
       - php5-mysql
-      - php5-curl
+      - openjdk-7-jdk
 # integration test slon errors in such as
 # slon: no process found
 # will be fixed by
@@ -58,16 +57,12 @@ install:
   - pwd
   - dpkg -l
   - php --version
-  - mkdir $HOME/bin
-  - curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
-  - export PATH=$PATH:$HOME/bin/
   - composer --version
   # plugin release branches install the corresponding dbsteward composer package
   # dev topic / master branches check out dbsteward git repo directly
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then composer global require nkiraly/dbsteward:$DBSTEWARD_COMPOSER_VERSION ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then export PATH=$PATH:~/.composer/vendor/bin ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then which dbsteward ; fi
-  - if [[ "$DBSTEWARD_PACKAGING" == "composer" ]]; then dbsteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then git clone --depth=50 --branch=$DBSTEWARD_GIT_BRANCH git://github.com/nkiraly/DBSteward.git /home/travis/build/nkiraly/DBSteward ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then cd /home/travis/build/nkiraly/DBSteward && composer install --dev --no-interaction ; fi
   - if [[ "$DBSTEWARD_PACKAGING" == "git" ]]; then export DBSTEWARD_BINARY_LOCATION=/home/travis/build/nkiraly/DBSteward/bin/dbsteward ; fi
@@ -91,3 +86,9 @@ before_script:
 script:
   - mvn clean install
   - ./run_ci_examples.sh
+# integration test slon errors such as
+# slon: no process found
+# will be fixed by
+# https://github.com/travis-ci/apt-package-whitelist/pull/1039
+# see packages section above
+# - ./run_slony_examples.sh
